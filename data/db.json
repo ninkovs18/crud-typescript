@@ -1,0 +1,49 @@
+{
+  "persons": [
+    {
+      "id": 3,
+      "name": "Laza",
+      "surname": "Peric",
+      "userType": "Moderator",
+      "createdDate": "02/04/2022",
+      "city": "Example City",
+      "address": "102 Main St"
+    },
+    {
+      "id": 4,
+      "name": "Toma",
+      "surname": "Mikic",
+      "userType": "Guest",
+      "createdDate": "16/12/2021",
+      "city": "Example City",
+      "address": "390 Main St"
+    },
+    {
+      "id": 5,
+      "name": "Pera",
+      "surname": "Mikic",
+      "userType": "Regular",
+      "createdDate": "30/01/2022",
+      "city": "Example City",
+      "address": "537 Main St"
+    },
+    {
+      "id": 6,
+      "name": "Zika",
+      "surname": "Tomic",
+      "userType": "Moderator",
+      "createdDate": "16/05/2020",
+      "city": "Example City",
+      "address": "524 Main St"
+    },
+    {
+      "id": 7,
+      "name": "Zika",
+      "surname": "Peric",
+      "userType": "Moderator",
+      "createdDate": "12/05/2021",
+      "city": "Example City",
+      "address": "155 Main St"
+    }
+  ]
+}
