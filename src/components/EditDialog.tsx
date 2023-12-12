@@ -8,6 +8,7 @@ import {
   TextField,
   DialogFooter,
   PrimaryButton,
+  Stack,
 } from "@fluentui/react";
 
 type EditDialogProps = {
@@ -82,7 +83,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
   );
 
   return (
-    <div data-is-scrollable="true">
+    <Stack>
       <DefaultButton
         onClick={editOpen}
         iconProps={editIcon}
@@ -151,7 +152,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
           <DefaultButton onClick={toggleHideDialog} text="Close" />
         </DialogFooter>
       </Dialog>
-    </div>
+    </Stack>
   );
 };
 

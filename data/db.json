@@ -62,6 +62,78 @@
       "createdDate": "12/11/2023",
       "city": "City",
       "address": "154 Main St"
+    },
+    {
+      "id": 12,
+      "name": "Pera",
+      "surname": "Peric",
+      "userType": "Admin",
+      "createdDate": "12/12/2023",
+      "city": "City",
+      "address": "Perina 80"
+    },
+    {
+      "id": 13,
+      "name": "Strahinja",
+      "surname": "Ninkov",
+      "userType": "Regular",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 14,
+      "name": "Nemanja",
+      "surname": "Ninkov",
+      "userType": "Admin",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 16,
+      "name": "Mika",
+      "surname": "Ninkov",
+      "userType": "Moderator",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 17,
+      "name": "Laza",
+      "surname": "Ninkov",
+      "userType": "Regular",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 18,
+      "name": "Ana",
+      "surname": "Ninkov",
+      "userType": "Guest",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 19,
+      "name": "Zika",
+      "surname": "Ninkov",
+      "userType": "Regular",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
+    },
+    {
+      "id": 20,
+      "name": "Laza",
+      "surname": "Ninkov",
+      "userType": "Admin",
+      "createdDate": "12/12/2023",
+      "city": "Pančevo",
+      "address": "7A Milosa Obrenovica"
     }
   ]
 }

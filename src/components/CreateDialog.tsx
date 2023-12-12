@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import apiRequest from "../apiRequest";
 import { useId, useBoolean } from "@fluentui/react-hooks";
 import {
   TextField,
@@ -8,6 +7,7 @@ import {
   DialogContent,
   DialogFooter,
   PrimaryButton,
+  Stack,
 } from "@fluentui/react";
 
 const dialogStyles = { main: { maxWidth: 450 } };
@@ -24,6 +24,8 @@ const createBtnDialog = {
     backgroundColor: "blue",
     color: "white",
     border: "1px solid black",
+    width: "150px",
+    marginRight: "20px"
   },
 };
 
@@ -104,7 +106,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
   };
 
   return (
-    <div data-is-scrollable="true">
+    <Stack>
       <DefaultButton
         onClick={toggleHideDialog}
         text="Create person"
@@ -168,7 +170,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
           <DefaultButton onClick={toggleHideDialog} text="Close" />
         </DialogFooter>
       </Dialog>
-    </div>
+    </Stack>
   );
 };
 export default CreateDialog;

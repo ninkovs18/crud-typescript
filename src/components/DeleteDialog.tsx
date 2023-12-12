@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogFooter,
   PrimaryButton,
+  Stack,
 } from "@fluentui/react";
 
 type DeleteDialogProps = {
@@ -53,7 +54,7 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
   );
 
   return (
-    <div data-is-scrollable="true">
+    <Stack>
       <DefaultButton
         onClick={toggleHideDialog}
         iconProps={deleteIcon}
@@ -76,7 +77,7 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
           <DefaultButton text="Close" onClick={toggleHideDialog} />
         </DialogFooter>
       </Dialog>
-    </div>
+    </Stack>
   );
 };
 

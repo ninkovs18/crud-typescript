@@ -7,6 +7,7 @@ import {
   mergeStyleSets,
   IComboBox,
   IComboBoxOption,
+  Stack,
 } from "@fluentui/react";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
@@ -90,7 +91,7 @@ const DisplayData = () => {
       postOptions
     );
 
-    console.log(newPerson);
+    console.log(result);
   };
 
   const handleDelete = async (id: number) => {
@@ -192,9 +193,9 @@ const DisplayData = () => {
     },
   ];
   return (
-    <div>
-      <div className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
-        <div style={{ display: "flex" }}>
+    <Stack>
+      <Stack className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
+        <Stack horizontal>
           <TextField
             label="Filter by name:"
             value={search}
@@ -218,10 +219,11 @@ const DisplayData = () => {
             ) => setType(value || "All")}
             defaultSelectedKey={""}
           />
-          <CreateDialog data={data} handleAddPerson={handleAddPerson} />
-        </div>
-        <div
-          data-is-scrollable="true"
+         <Stack style={{justifyContent: "center", flexGrow: 2, alignItems: "end"}}>
+         <CreateDialog data={data} handleAddPerson={handleAddPerson} />
+         </Stack>
+        </Stack>
+        <Stack
           style={{ overflow: "auto", height: "70vh" }}
         >
           <DetailsList
@@ -241,9 +243,9 @@ const DisplayData = () => {
               There is no result for the given search filter
             </p>
           )}
-        </div>
-      </div>
-    </div>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 };
 
