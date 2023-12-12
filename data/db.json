@@ -2,7 +2,7 @@
   "persons": [
     {
       "id": 3,
-      "name": "Laza",
+      "name": "Lazaa",
       "surname": "Peric",
       "userType": "Moderator",
       "createdDate": "02/04/2022",
@@ -20,7 +20,7 @@
     },
     {
       "id": 5,
-      "name": "Pera",
+      "name": "Peraa",
       "surname": "Mikic",
       "userType": "Regular",
       "createdDate": "30/01/2022",
@@ -39,11 +39,29 @@
     {
       "id": 7,
       "name": "Zika",
-      "surname": "Peric",
+      "surname": "Periiiiic",
       "userType": "Moderator",
       "createdDate": "12/05/2021",
       "city": "Example City",
       "address": "155 Main St"
+    },
+    {
+      "id": 10,
+      "name": "Mika",
+      "surname": "Mikic",
+      "userType": "Admin",
+      "createdDate": "12/11/2023",
+      "city": "Mikovac",
+      "address": "Mikina 61"
+    },
+    {
+      "id": 11,
+      "name": "Ana",
+      "surname": "Anic",
+      "userType": "Regular",
+      "createdDate": "12/11/2023",
+      "city": "City",
+      "address": "154 Main St"
     }
   ]
 }

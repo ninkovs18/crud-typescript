@@ -1,12 +1,7 @@
 import { useState } from "react";
 
 import { Nav, initializeIcons } from "@fluentui/react";
-import {
-  INavButtonProps,
-  INavLink,
-  INavStyleProps,
-  INavStyles,
-} from "@fluentui/react/lib/Nav";
+import { INavLink, INavStyles } from "@fluentui/react/lib/Nav";
 import { useNavigate } from "react-router-dom";
 
 const navigationStyles: Partial<INavStyles> = {
@@ -39,13 +34,13 @@ const links = [
         key: "1",
       },
       {
-        name: "Add",
-        url: "/create",
+        name: "Link 2",
+        url: "/link2",
         key: "2",
       },
       {
-        name: "Actions",
-        url: "/",
+        name: "Link 3",
+        url: "/link3",
         key: "3",
       },
     ],

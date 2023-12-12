@@ -11,6 +11,7 @@ import {
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
 import apiRequest from "../apiRequest";
+import CreateDialog from "./CreateDialog";
 
 interface IPerson {
   id: number;
@@ -27,16 +28,6 @@ const controlStyles = {
     margin: "0 30px 20px 0",
     maxWidth: "300px",
   },
-  fieldGroup: {
-    selectors: {
-      ":focus-within": {
-        border: "2px solid rgb(137, 247, 11)",
-      },
-      "::after": {
-        border: "0px",
-      },
-    },
-  },
 };
 
 const classNames = mergeStyleSets({
@@ -48,14 +39,6 @@ const classNames = mergeStyleSets({
 const comboBoxStyles = {
   root: {
     maxWidth: 300,
-    selectors: {
-      ":focus-within": {
-        border: "2px solid rgb(137, 247, 11)",
-      },
-      "::after": {
-        border: "0px",
-      },
-    },
   },
 };
 
@@ -90,6 +73,25 @@ const DisplayData = () => {
       },
     ]
   );
+
+  const handleAddPerson = async (newPerson: IPerson) => {
+    setData((data) => [...data, newPerson]);
+
+    const postOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPerson),
+    };
+
+    const result = await apiRequest(
+      "http://localhost:3003/persons",
+      postOptions
+    );
+
+    console.log(newPerson);
+  };
 
   const handleDelete = async (id: number) => {
     setData((data) => data.filter((d) => d.id !== id));
@@ -139,11 +141,6 @@ const DisplayData = () => {
       fieldName: "name",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "rgb(137, 247, 11)",
-        },
-      },
     },
     {
       key: "column2",
@@ -151,11 +148,6 @@ const DisplayData = () => {
       fieldName: "surname",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "rgb(137, 247, 11)",
-        },
-      },
     },
     {
       key: "column3",
@@ -163,11 +155,6 @@ const DisplayData = () => {
       fieldName: "userType",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "rgb(137, 247, 11)",
-        },
-      },
     },
     {
       key: "column4",
@@ -175,11 +162,6 @@ const DisplayData = () => {
       fieldName: "city",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "rgb(137, 247, 11)",
-        },
-      },
     },
     {
       key: "column5",
@@ -187,11 +169,6 @@ const DisplayData = () => {
       fieldName: "address",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "rgb(137, 247, 11)",
-        },
-      },
     },
     {
       key: "edit",
@@ -199,11 +176,6 @@ const DisplayData = () => {
       fieldName: "edit",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "blue",
-        },
-      },
       onRender: (item: IPerson) => (
         <EditDialog handleEdit={handleEdit} user={item} />
       ),
@@ -214,11 +186,6 @@ const DisplayData = () => {
       fieldName: "delete",
       minWidth: 50,
       maxWidth: 150,
-      styles: {
-        root: {
-          color: "red",
-        },
-      },
       onRender: (item: IPerson) => (
         <DeleteDialog handleDelete={() => handleDelete(item.id)} />
       ),
@@ -251,6 +218,7 @@ const DisplayData = () => {
             ) => setType(value || "All")}
             defaultSelectedKey={""}
           />
+          <CreateDialog data={data} handleAddPerson={handleAddPerson} />
         </div>
         <div
           data-is-scrollable="true"

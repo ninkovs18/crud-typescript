@@ -5,7 +5,6 @@ import {
   DefaultButton,
   Dialog,
   DialogContent,
-  Label,
   TextField,
   DialogFooter,
   PrimaryButton,
@@ -43,19 +42,6 @@ const submitStyle = {
   root: {
     backgroundColor: "blue",
     border: "0px",
-  },
-};
-
-const controlStyles = {
-  fieldGroup: {
-    selectors: {
-      ":focus-within": {
-        border: "2px solid rgb(137, 247, 11)",
-      },
-      "::after": {
-        border: "0px",
-      },
-    },
   },
 };
 
@@ -110,70 +96,50 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
         minWidth={400}
       >
         <DialogContent title="Edit person">
-          <Label required htmlFor={"name-input"}>
-            Name:
-          </Label>
           <TextField
             type="text"
-            id={"name-input"}
+            label="Name"
             defaultValue={user.name}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, name: newValue || "" })}
-            styles={controlStyles}
           />
-          <Label required htmlFor={"surname-input"}>
-            Surname:
-          </Label>
           <TextField
             type="text"
-            id={"surname-input"}
+            label="Surname"
             defaultValue={user.surname}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, surname: newValue || "" })}
-            styles={controlStyles}
           />
-          <Label required htmlFor={"userType-input"}>
-            User type:
-          </Label>
           <TextField
             type="text"
-            id={"userType-input"}
+            label="User type"
             defaultValue={user.userType}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, userType: newValue || "" })}
-            styles={controlStyles}
           />
-          <Label required htmlFor={"city-input"}>
-            City:
-          </Label>
           <TextField
             type="text"
-            id={"city-input"}
+            label="City"
             defaultValue={user.city}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, city: newValue || "" })}
-            styles={controlStyles}
           />
-          <Label required htmlFor={"Address-input"}>
-            Address:
-          </Label>
           <TextField
             type="text"
-            id={"Address-input"}
+            label="Address"
             defaultValue={user.address}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, address: newValue || "" })}
-            styles={controlStyles}
           />
         </DialogContent>
         <DialogFooter>

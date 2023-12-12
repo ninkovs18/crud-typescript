@@ -66,7 +66,7 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
         modalProps={modalProps}
         minWidth={400}
       >
-        <DialogContent title="Do you want to delete this pearson?"></DialogContent>
+        <DialogContent title="Do you want to delete this person?"></DialogContent>
         <DialogFooter>
           <PrimaryButton
             styles={submitStyle}

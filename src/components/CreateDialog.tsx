@@ -1,31 +1,57 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import apiRequest from "../apiRequest";
+import { useId, useBoolean } from "@fluentui/react-hooks";
 import {
-  Label,
   TextField,
-  PrimaryButton,
   DefaultButton,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  PrimaryButton,
 } from "@fluentui/react";
 
-const controlStyles = {
-  fieldGroup: {
-    selectors: {
-      ":focus-within": {
-        border: "2px solid rgb(137, 247, 11)",
-      },
-      "::after": {
-        border: "0px",
-      },
-    },
+const dialogStyles = { main: { maxWidth: 450 } };
+
+const submitStyle = {
+  root: {
+    backgroundColor: "blue",
+    border: "0px",
   },
 };
 
-const CreateDialog = () => {
+const createBtnDialog = {
+  root: {
+    backgroundColor: "blue",
+    color: "white",
+    border: "1px solid black",
+  },
+};
+
+type CreateDialogProps = {
+  data: IPerson[];
+  handleAddPerson: (newPerson: IPerson) => Promise<void>;
+};
+
+interface IPerson {
+  id: number;
+  name: string;
+  surname: string;
+  userType: string;
+  createdDate: string;
+  city: string;
+  address: string;
+}
+
+const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
   const [name, setName] = useState<string>("");
   const [surname, setSurName] = useState<string>("");
   const [userType, setUserType] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [address, setAddress] = useState<string>("");
+
+  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+  const labelId = useId("dialogLabel");
+  const subTextId = useId("subTextLabel");
 
   const reset = () => {
     setName("");
@@ -34,6 +60,15 @@ const CreateDialog = () => {
     setCity("");
     setUserType("");
   };
+  const modalProps = useMemo(
+    () => ({
+      titleAriaId: labelId,
+      subtitleAriaId: subTextId,
+      isBlocking: false,
+      styles: dialogStyles,
+    }),
+    [labelId, subTextId]
+  );
 
   const handleAdd = async () => {
     if (
@@ -52,7 +87,9 @@ const CreateDialog = () => {
       month: "2-digit",
       day: "2-digit",
     });
+    const id = data[data.length - 1].id + 1;
     const newUser = {
+      id,
       name,
       surname,
       userType,
@@ -61,93 +98,76 @@ const CreateDialog = () => {
       address,
     };
 
-    const postOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newUser),
-    };
-
-    const result = await apiRequest(
-      "http://localhost:3003/persons",
-      postOptions
-    );
-    console.log(newUser);
+    handleAddPerson(newUser);
+    toggleHideDialog();
     reset();
   };
 
   return (
-    <div>
-      <Label required htmlFor={"name-input"}>
-        Name:
-      </Label>
-      <TextField
-        type="text"
-        id={"name-input"}
-        value={name}
-        onChange={(
-          event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-          newValue?: string
-        ) => setName(newValue || "")}
-        styles={controlStyles}
+    <div data-is-scrollable="true">
+      <DefaultButton
+        onClick={toggleHideDialog}
+        text="Create person"
+        styles={createBtnDialog}
       />
-      <Label required htmlFor={"surname-input"}>
-        Surname:
-      </Label>
-      <TextField
-        type="text"
-        id={"surname-input"}
-        value={surname}
-        onChange={(
-          event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-          newValue?: string
-        ) => setSurName(newValue || "")}
-        styles={controlStyles}
-      />
-      <Label required htmlFor={"userType-input"}>
-        User type:
-      </Label>
-      <TextField
-        type="text"
-        id={"userType-input"}
-        value={userType}
-        onChange={(
-          event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-          newValue?: string
-        ) => setUserType(newValue || "")}
-        styles={controlStyles}
-      />
-      <Label required htmlFor={"city-input"}>
-        City:
-      </Label>
-      <TextField
-        type="text"
-        id={"city-input"}
-        value={city}
-        onChange={(
-          event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-          newValue?: string
-        ) => setCity(newValue || "")}
-        styles={controlStyles}
-      />
-      <Label required htmlFor={"Address-input"}>
-        Address:
-      </Label>
-      <TextField
-        type="text"
-        id={"Address-input"}
-        value={address}
-        onChange={(
-          event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-          newValue?: string
-        ) => setAddress(newValue || "")}
-        styles={controlStyles}
-      />
-      <div style={{ alignItems: "center", justifyContent: "center" }}>
-        <PrimaryButton onClick={handleAdd} text="Create" />
-        <DefaultButton onClick={reset} text="Reset" />
-      </div>
+
+      <Dialog
+        hidden={hideDialog}
+        onDismiss={toggleHideDialog}
+        modalProps={modalProps}
+        minWidth={400}
+      >
+        <DialogContent title="Create person">
+          <TextField
+            type="text"
+            label="Name"
+            onChange={(
+              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              newValue?: string
+            ) => setName(newValue || "")}
+          />
+          <TextField
+            type="text"
+            label="Surname"
+            onChange={(
+              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              newValue?: string
+            ) => setSurName(newValue || "")}
+          />
+          <TextField
+            type="text"
+            label="User type"
+            onChange={(
+              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              newValue?: string
+            ) => setUserType(newValue || "")}
+          />
+          <TextField
+            type="text"
+            label="City"
+            onChange={(
+              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              newValue?: string
+            ) => setCity(newValue || "")}
+          />
+          <TextField
+            type="text"
+            label="Address"
+            onChange={(
+              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              newValue?: string
+            ) => setAddress(newValue || "")}
+          />
+        </DialogContent>
+        <DialogFooter>
+          <PrimaryButton
+            styles={submitStyle}
+            onClick={handleAdd}
+            text="Create"
+          />
+          <DefaultButton onClick={toggleHideDialog} text="Close" />
+        </DialogFooter>
+      </Dialog>
     </div>
   );
 };
