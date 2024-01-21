@@ -2,7 +2,8 @@ import React from "react";
 
 const HeaderStyle = {
   height: "10vh",
-  backgroundColor: "rgb(127, 159, 247)",
+  backgroundColor: "#212529",
+  color: "#fff",
   textAlign: "center",
   display: "flex",
   justifyContent: "center",
@@ -12,7 +13,9 @@ const HeaderStyle = {
 const Header = () => {
   return (
     <header style={HeaderStyle}>
-      <h1>HEADER</h1>
+      <h1 style={{ textAlign: "left", width: "100%", marginLeft: "40px" }}>
+        Admin panel
+      </h1>
     </header>
   );
 };

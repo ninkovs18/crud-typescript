@@ -10,71 +10,134 @@ import {
   Stack,
 } from "@fluentui/react";
 
+import {
+  IButtonStyles,
+  IDialogStyles,
+  ITextFieldStyles,
+  ILabelStyles,
+  IDialogContentStyles,
+} from "@fluentui/react";
+
 type DeleteDialogProps = {
   handleDelete: () => Promise<void>;
 };
 
-const dialogStyles = { main: { maxWidth: 450 } };
 const deleteIcon = {
   iconName: "Delete",
-  styles: { root: { fontSize: "25px", color: "red" } },
+  styles: {
+    root: {
+      color: "#fff",
+      padding: "10px",
+      backgroundColor: "#e03131",
+      borderRadius: "50%",
+    },
+  },
 };
-const deleteStyle = {
+const deleteBtnStyle: IButtonStyles = {
   root: {
     border: "0px",
+    borderRadius: "0.75rem",
+    width: "50px",
+    backgroundColor: "transparent",
+    padding: "0px",
+  },
+  flexContainer: {
+    justifyContent: "start",
+  },
+};
+
+const dialogStyle: IDialogStyles = {
+  main: {
+    backgroundColor: "#212529",
+  },
+  root: {
     backgroundColor: "transparent",
   },
 };
 
-const submitStyle = {
+const dialogContentStyles: Partial<IDialogContentStyles> = {
+  title: {
+    color: "#dee2e6",
+    fontSize: "30px",
+  },
+};
+
+const submitStyle: IButtonStyles = {
   root: {
-    backgroundColor: "red",
+    backgroundColor: "#7950f2",
+    color: "#fff",
     border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    border: "0px",
+    color: "#fff",
+  },
+};
+
+const closeBtnStyle: IButtonStyles = {
+  root: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
+    border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#e03131",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
   },
 };
 
 const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
-  const labelId = useId("dialogLabel");
-  const subTextId = useId("subTextLabel");
 
   const onClickDelete = () => {
     handleDelete();
     toggleHideDialog();
   };
 
-  const modalProps = useMemo(
-    () => ({
-      titleAriaId: labelId,
-      subtitleAriaId: subTextId,
-      isBlocking: false,
-      styles: dialogStyles,
-    }),
-    [labelId, subTextId]
-  );
-
   return (
     <Stack>
       <DefaultButton
         onClick={toggleHideDialog}
         iconProps={deleteIcon}
-        styles={deleteStyle}
+        styles={deleteBtnStyle}
       />
 
       <Dialog
         hidden={hideDialog}
         onDismiss={toggleHideDialog}
-        modalProps={modalProps}
         minWidth={400}
+        styles={dialogStyle}
       >
-        <DialogContent title="Do you want to delete this person?"></DialogContent>
+        <DialogContent
+          title="Do you want to delete this person?"
+          styles={dialogContentStyles}
+        ></DialogContent>
         <DialogFooter>
           <PrimaryButton
             styles={submitStyle}
             onClick={onClickDelete}
             text="Delete"
           />
-          <DefaultButton text="Close" onClick={toggleHideDialog} />
+          <DefaultButton
+            text="Close"
+            onClick={toggleHideDialog}
+            styles={closeBtnStyle}
+          />
         </DialogFooter>
       </Dialog>
     </Stack>

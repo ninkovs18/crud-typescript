@@ -9,6 +9,12 @@ import {
   IComboBoxOption,
   Stack,
 } from "@fluentui/react";
+import {
+  ILabelStyles,
+  ITextFieldStyles,
+  IComboBoxStyles,
+  IDetailsListStyles,
+} from "@fluentui/react";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
 import apiRequest from "../apiRequest";
@@ -24,11 +30,69 @@ interface IPerson {
   address: string;
 }
 
-const controlStyles = {
+const labelStyles: Partial<ILabelStyles> = {
+  root: {
+    color: "#dee2e6",
+  },
+};
+const textFieldStyles: Partial<ITextFieldStyles> = {
+  subComponentStyles: {
+    label: labelStyles,
+  },
   root: {
     margin: "0 30px 20px 0",
     maxWidth: "300px",
   },
+  fieldGroup: {
+    border: "0px",
+    borderBottom: "2px solid #6741d9",
+    selectors: {
+      ":focus-within": {
+        borderBottom: "2px solid #6741d9",
+      },
+      ":hover": {
+        borderBottom: "2px solid #6741d9",
+      },
+      "::after": {
+        border: "0px",
+      },
+    },
+  },
+  field: {
+    color: "#dee2e6",
+    fontSize: "17px",
+    backgroundColor: "#2b3035",
+  },
+};
+const comboBoxStyles: Partial<IComboBoxStyles> = {
+  root: {
+    maxWidth: "300px",
+    backgroundColor: "#6741d9",
+    selectors: {
+      ":focus-within": {
+        borderBottom: "0px",
+      },
+      ":hover": {
+        borderBottom: "0px",
+      },
+      "::after": {
+        border: "0px",
+      },
+    },
+  },
+  input: {
+    backgroundColor: "#6741d9",
+  },
+  optionsContainerWrapper: {
+    maxWidth: "300px",
+  },
+  label: {
+    color: "#dee2e6",
+  },
+};
+
+const detailsListStyles: Partial<IDetailsListStyles> = {
+  focusZone: {},
 };
 
 const classNames = mergeStyleSets({
@@ -36,12 +100,6 @@ const classNames = mergeStyleSets({
     margin: "auto",
   },
 });
-
-const comboBoxStyles = {
-  root: {
-    maxWidth: 300,
-  },
-};
 
 const DisplayData = () => {
   const [data, setData] = useState<IPerson[]>([]);
@@ -176,7 +234,7 @@ const DisplayData = () => {
       name: "Edit",
       fieldName: "edit",
       minWidth: 50,
-      maxWidth: 150,
+      maxWidth: 100,
       onRender: (item: IPerson) => (
         <EditDialog handleEdit={handleEdit} user={item} />
       ),
@@ -186,7 +244,7 @@ const DisplayData = () => {
       name: "Delete",
       fieldName: "delete",
       minWidth: 50,
-      maxWidth: 150,
+      maxWidth: 100,
       onRender: (item: IPerson) => (
         <DeleteDialog handleDelete={() => handleDelete(item.id)} />
       ),
@@ -199,11 +257,11 @@ const DisplayData = () => {
           <TextField
             label="Filter by name:"
             value={search}
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setSearch(newValue || "")}
-            styles={controlStyles}
           />
           <ComboBox
             label="Filter by user type:"
@@ -219,27 +277,27 @@ const DisplayData = () => {
             ) => setType(value || "All")}
             defaultSelectedKey={""}
           />
-         <Stack style={{justifyContent: "center", flexGrow: 2, alignItems: "end"}}>
-         <CreateDialog data={data} handleAddPerson={handleAddPerson} />
-         </Stack>
+          <Stack
+            style={{ justifyContent: "center", flexGrow: 2, alignItems: "end" }}
+          >
+            <CreateDialog data={data} handleAddPerson={handleAddPerson} />
+          </Stack>
         </Stack>
-        <Stack
-          style={{ overflow: "auto", height: "70vh" }}
-        >
+        <Stack style={{ overflow: "auto", height: "70vh" }}>
           <DetailsList
+            styles={detailsListStyles}
             columns={columns}
             items={filterData}
             setKey="multiple"
             selectionMode={SelectionMode.none}
-            selectionPreservedOnEmptyClick={true}
           />
           {!data.length && (
-            <p style={{ textAlign: "center" }}>
+            <p style={{ textAlign: "center", color: "#fff" }}>
               there is no person in the list
             </p>
           )}
           {!filterData.length && (
-            <p style={{ textAlign: "center" }}>
+            <p style={{ textAlign: "center", color: "#fff" }}>
               There is no result for the given search filter
             </p>
           )}

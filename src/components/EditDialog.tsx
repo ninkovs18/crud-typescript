@@ -11,6 +11,14 @@ import {
   Stack,
 } from "@fluentui/react";
 
+import {
+  IButtonStyles,
+  IDialogStyles,
+  ITextFieldStyles,
+  ILabelStyles,
+  IDialogContentStyles,
+} from "@fluentui/react";
+
 type EditDialogProps = {
   user: IPerson;
   handleEdit: (editUser: IPerson) => Promise<void>;
@@ -26,23 +34,93 @@ interface IPerson {
   address: string;
 }
 
-const dialogStyles = { main: { maxWidth: 450 } };
-
 const editIcon = {
   iconName: "EditContact",
-  styles: { root: { fontSize: "25px", color: "blue" } },
+  styles: {
+    root: {
+      color: "#fff",
+      padding: "10px",
+      backgroundColor: "#7950f2",
+      borderRadius: "50%",
+    },
+  },
 };
-const editStyle = {
+const editBtnDialog: IButtonStyles = {
   root: {
     border: "0px",
+    borderRadius: "0.75rem",
+    width: "50px",
+    backgroundColor: "transparent",
+    padding: "0px",
+  },
+  flexContainer: {
+    justifyContent: "start",
+  },
+};
+
+const submitStyle: IButtonStyles = {
+  root: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+    border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    border: "0px",
+    color: "#fff",
+  },
+};
+
+const closeBtnStyle: IButtonStyles = {
+  root: {
+    backgroundColor: "#fa5252",
+    color: "white",
+    border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#e03131",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
+  },
+};
+
+const dialogStyle: IDialogStyles = {
+  main: {
+    backgroundColor: "#212529",
+  },
+  root: {
     backgroundColor: "transparent",
   },
 };
 
-const submitStyle = {
+const dialogContentStyles: Partial<IDialogContentStyles> = {
+  title: {
+    color: "#dee2e6",
+    fontSize: "35px",
+  },
+};
+
+const labelStyles: Partial<ILabelStyles> = {
   root: {
-    backgroundColor: "blue",
-    border: "0px",
+    color: "#dee2e6",
+  },
+};
+const textFieldStyles: Partial<ITextFieldStyles> = {
+  subComponentStyles: {
+    label: labelStyles,
   },
 };
 
@@ -50,8 +128,6 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
   const [userEdit, setUserEdit] = useState<IPerson>(user);
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
-  const labelId = useId("dialogLabel");
-  const subTextId = useId("subTextLabel");
 
   const editOpen = () => {
     toggleHideDialog();
@@ -72,34 +148,25 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
     toggleHideDialog();
   };
 
-  const modalProps = useMemo(
-    () => ({
-      titleAriaId: labelId,
-      subtitleAriaId: subTextId,
-      isBlocking: false,
-      styles: dialogStyles,
-    }),
-    [labelId, subTextId]
-  );
-
   return (
     <Stack>
       <DefaultButton
         onClick={editOpen}
         iconProps={editIcon}
-        styles={editStyle}
+        styles={editBtnDialog}
       />
 
       <Dialog
         hidden={hideDialog}
         onDismiss={toggleHideDialog}
-        modalProps={modalProps}
         minWidth={400}
+        styles={dialogStyle}
       >
-        <DialogContent title="Edit person">
+        <DialogContent title="Edit person" styles={dialogContentStyles}>
           <TextField
             type="text"
             label="Name"
+            styles={textFieldStyles}
             defaultValue={user.name}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -109,6 +176,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
           <TextField
             type="text"
             label="Surname"
+            styles={textFieldStyles}
             defaultValue={user.surname}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -118,6 +186,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
           <TextField
             type="text"
             label="User type"
+            styles={textFieldStyles}
             defaultValue={user.userType}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -127,6 +196,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
           <TextField
             type="text"
             label="City"
+            styles={textFieldStyles}
             defaultValue={user.city}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -136,6 +206,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
           <TextField
             type="text"
             label="Address"
+            styles={textFieldStyles}
             defaultValue={user.address}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -149,7 +220,11 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             onClick={onClickEdit}
             text="Edit"
           />
-          <DefaultButton onClick={toggleHideDialog} text="Close" />
+          <DefaultButton
+            onClick={toggleHideDialog}
+            text="Close"
+            styles={closeBtnStyle}
+          />
         </DialogFooter>
       </Dialog>
     </Stack>

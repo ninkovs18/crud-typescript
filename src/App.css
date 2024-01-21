@@ -1,17 +1,6 @@
-#root {
-  background-color: rgba(225, 223, 221, 0.2);
-}
-.header {
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(104, 104, 104, 0.2);
-}
 .ms-Grid-col {
   padding-left: 0;
   margin-left: 0;
-}
-.ms-Nav {
-  background-color: rgb(186, 202, 245);
+  padding-right: 0;
+  margin-right: 0;
 }

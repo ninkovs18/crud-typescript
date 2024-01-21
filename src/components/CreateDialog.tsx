@@ -8,24 +8,96 @@ import {
   DialogFooter,
   PrimaryButton,
   Stack,
+  ITextStyles,
+} from "@fluentui/react";
+import {
+  IButtonStyles,
+  IDialogStyles,
+  ITextFieldStyles,
+  ILabelStyles,
+  IDialogContentStyles,
 } from "@fluentui/react";
 
-const dialogStyles = { main: { maxWidth: 450 } };
-
-const submitStyle = {
+const submitStyle: IButtonStyles = {
   root: {
-    backgroundColor: "blue",
+    backgroundColor: "#7950f2",
+    color: "#fff",
     border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    border: "0px",
+    color: "#fff",
+  },
+};
+const closeBtnStyle: IButtonStyles = {
+  root: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
+    border: "0px",
+    borderRadius: "0.75rem",
+    padding: "15px 20px",
+  },
+  rootHovered: {
+    backgroundColor: "#e03131",
+    color: "#fff",
+    border: "0px",
+  },
+  rootPressed: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
+  },
+};
+const createBtnDialog: IButtonStyles = {
+  root: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+    padding: "16px 30px",
+    border: "0px",
+    marginRight: "20px",
+    borderRadius: "0.75rem",
+  },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
+  },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
   },
 };
 
-const createBtnDialog = {
+const dialogStyle: IDialogStyles = {
+  main: {
+    backgroundColor: "#212529",
+  },
   root: {
-    backgroundColor: "blue",
-    color: "white",
-    border: "1px solid black",
-    width: "150px",
-    marginRight: "20px"
+    backgroundColor: "transparent",
+  },
+};
+
+const dialogContentStyles: Partial<IDialogContentStyles> = {
+  title: {
+    color: "#dee2e6",
+    fontSize: "35px",
+  },
+};
+
+const labelStyles: Partial<ILabelStyles> = {
+  root: {
+    color: "#dee2e6",
+  },
+};
+const textFieldStyles: Partial<ITextFieldStyles> = {
+  subComponentStyles: {
+    label: labelStyles,
   },
 };
 
@@ -52,8 +124,6 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
   const [address, setAddress] = useState<string>("");
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
-  const labelId = useId("dialogLabel");
-  const subTextId = useId("subTextLabel");
 
   const reset = () => {
     setName("");
@@ -62,15 +132,6 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
     setCity("");
     setUserType("");
   };
-  const modalProps = useMemo(
-    () => ({
-      titleAriaId: labelId,
-      subtitleAriaId: subTextId,
-      isBlocking: false,
-      styles: dialogStyles,
-    }),
-    [labelId, subTextId]
-  );
 
   const handleAdd = async () => {
     if (
@@ -116,13 +177,14 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
       <Dialog
         hidden={hideDialog}
         onDismiss={toggleHideDialog}
-        modalProps={modalProps}
         minWidth={400}
+        styles={dialogStyle}
       >
-        <DialogContent title="Create person">
+        <DialogContent title="Create person" styles={dialogContentStyles}>
           <TextField
             type="text"
             label="Name"
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
@@ -131,6 +193,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
           <TextField
             type="text"
             label="Surname"
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
@@ -139,6 +202,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
           <TextField
             type="text"
             label="User type"
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
@@ -147,6 +211,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
           <TextField
             type="text"
             label="City"
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
@@ -155,6 +220,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
           <TextField
             type="text"
             label="Address"
+            styles={textFieldStyles}
             onChange={(
               event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
@@ -167,7 +233,11 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             onClick={handleAdd}
             text="Create"
           />
-          <DefaultButton onClick={toggleHideDialog} text="Close" />
+          <DefaultButton
+            onClick={toggleHideDialog}
+            text="Close"
+            styles={closeBtnStyle}
+          />
         </DialogFooter>
       </Dialog>
     </Stack>
