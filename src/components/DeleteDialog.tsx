@@ -28,8 +28,11 @@ const deleteIcon = {
     root: {
       color: "#fff",
       padding: "10px",
-      backgroundColor: "#e03131",
+      backgroundColor: "#fa5252",
       borderRadius: "50%",
+      selectors: {
+        ":hover": { backgroundColor: "#e03131" },
+      },
     },
   },
 };
@@ -43,6 +46,10 @@ const deleteBtnStyle: IButtonStyles = {
   },
   flexContainer: {
     justifyContent: "start",
+    background: "#transparent",
+    selectors: {
+      ":hover": { background: "#212529" },
+    },
   },
 };
 

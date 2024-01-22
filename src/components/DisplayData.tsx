@@ -1,19 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactElement } from "react";
 import {
   SelectionMode,
   DetailsList,
   TextField,
   ComboBox,
-  mergeStyleSets,
+  mergeStyles,
   IComboBox,
   IComboBoxOption,
   Stack,
+  IDetailsRowStyles,
+  IColumn,
+  DetailsRow,
+  IDetailsHeaderProps,
+  DetailsHeader,
+  IDetailsColumnStyles,
+  ITooltipHostProps,
+  IDetailsColumnRenderTooltipProps,
+  DetailsColumn,
+  DetailsColumnBase,
+  Tooltip,
+  TooltipBase,
 } from "@fluentui/react";
 import {
   ILabelStyles,
   ITextFieldStyles,
   IComboBoxStyles,
   IDetailsListStyles,
+  IRenderFunction,
+  IDetailsRowProps,
 } from "@fluentui/react";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
@@ -90,16 +104,6 @@ const comboBoxStyles: Partial<IComboBoxStyles> = {
     color: "#dee2e6",
   },
 };
-
-const detailsListStyles: Partial<IDetailsListStyles> = {
-  focusZone: {},
-};
-
-const classNames = mergeStyleSets({
-  table: {
-    margin: "auto",
-  },
-});
 
 const DisplayData = () => {
   const [data, setData] = useState<IPerson[]>([]);
@@ -193,48 +197,49 @@ const DisplayData = () => {
           .filter((d) => d.userType === type)
       : data.filter((d) => d.userType === type);
 
-  const columns = [
+  const columns: IColumn[] = [
     {
       key: "column1",
       name: "Name",
       fieldName: "name",
-      minWidth: 50,
-      maxWidth: 150,
+      minWidth: 100,
+      maxWidth: 230,
     },
     {
       key: "column2",
       name: "Surname",
       fieldName: "surname",
-      minWidth: 50,
-      maxWidth: 150,
+      minWidth: 100,
+      maxWidth: 230,
     },
     {
       key: "column3",
       name: "User type",
       fieldName: "userType",
-      minWidth: 50,
-      maxWidth: 150,
+      minWidth: 100,
+      maxWidth: 230,
     },
     {
       key: "column4",
       name: "City",
       fieldName: "city",
-      minWidth: 50,
-      maxWidth: 150,
+      minWidth: 100,
+      maxWidth: 230,
     },
     {
       key: "column5",
       name: "Address",
       fieldName: "address",
-      minWidth: 50,
-      maxWidth: 150,
+      minWidth: 100,
+      maxWidth: 230,
     },
     {
       key: "edit",
       name: "Edit",
       fieldName: "edit",
       minWidth: 50,
-      maxWidth: 100,
+      maxWidth: 70,
+
       onRender: (item: IPerson) => (
         <EditDialog handleEdit={handleEdit} user={item} />
       ),
@@ -244,16 +249,82 @@ const DisplayData = () => {
       name: "Delete",
       fieldName: "delete",
       minWidth: 50,
-      maxWidth: 100,
+      maxWidth: 70,
+
       onRender: (item: IPerson) => (
         <DeleteDialog handleDelete={() => handleDelete(item.id)} />
       ),
     },
   ];
+
+  const onRenderRow: IRenderFunction<IDetailsRowProps> = (props) => {
+    if (props) {
+      return (
+        <div>
+          <DetailsRow
+            {...props}
+            styles={{
+              root: {
+                backgroundColor: "#2b3035",
+                color: "#dee2e6",
+                fontSize: "14px",
+                borderBottom: "1px solid #343a40",
+                selectors: {
+                  ":hover": {
+                    background: "#212529",
+                    color: "#dee2e6",
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const onRenderDetailsHeader: IRenderFunction<IDetailsHeaderProps> = (
+    props
+  ) => {
+    if (props) {
+      return (
+        <div>
+          <DetailsHeader
+            {...props}
+            styles={{
+              root: {
+                backgroundColor: "#343a40",
+                color: "#fff",
+                borderBottom: "1px solid #343a40",
+                selectors: {
+                  ":hover": {
+                    background: "#212529",
+                    color: "#fff",
+                  },
+                  ".ms-DetailsHeader-cell": {},
+                  ".ms-DetailsHeader-cellTitle": {
+                    color: "#fff",
+                    selectors: {
+                      ":hover": { background: "#212529" },
+                    },
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Stack>
-      <Stack className={`s-Grid-col ms-sm9 ms-xl9 ${classNames.table}`}>
-        <Stack horizontal>
+      <Stack style={{ padding: "40px" }}>
+        <Stack horizontal style={{ padding: "0px 20px" }}>
           <TextField
             label="Filter by name:"
             value={search}
@@ -278,18 +349,29 @@ const DisplayData = () => {
             defaultSelectedKey={""}
           />
           <Stack
-            style={{ justifyContent: "center", flexGrow: 2, alignItems: "end" }}
+            style={{
+              justifyContent: "center",
+              flexGrow: 2,
+              alignItems: "end",
+            }}
           >
             <CreateDialog data={data} handleAddPerson={handleAddPerson} />
           </Stack>
         </Stack>
-        <Stack style={{ overflow: "auto", height: "70vh" }}>
+        <Stack
+          style={{
+            overflowY: "auto",
+            height: "70vh",
+          }}
+        >
           <DetailsList
-            styles={detailsListStyles}
             columns={columns}
             items={filterData}
             setKey="multiple"
             selectionMode={SelectionMode.none}
+            onShouldVirtualize={() => false}
+            onRenderRow={onRenderRow}
+            onRenderDetailsHeader={onRenderDetailsHeader}
           />
           {!data.length && (
             <p style={{ textAlign: "center", color: "#fff" }}>

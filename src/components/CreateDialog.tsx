@@ -99,6 +99,26 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
   subComponentStyles: {
     label: labelStyles,
   },
+  fieldGroup: {
+    border: "0px",
+    borderBottom: "2px solid #6741d9",
+    selectors: {
+      ":focus-within": {
+        borderBottom: "2px solid #6741d9",
+      },
+      ":hover": {
+        borderBottom: "2px solid #6741d9",
+      },
+      "::after": {
+        border: "0px",
+      },
+    },
+  },
+  field: {
+    color: "#dee2e6",
+    fontSize: "17px",
+    backgroundColor: "#212529",
+  },
 };
 
 type CreateDialogProps = {

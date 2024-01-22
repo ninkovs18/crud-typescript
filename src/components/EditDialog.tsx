@@ -42,6 +42,9 @@ const editIcon = {
       padding: "10px",
       backgroundColor: "#7950f2",
       borderRadius: "50%",
+      selectors: {
+        ":hover": { backgroundColor: "#6741d9" },
+      },
     },
   },
 };
@@ -55,6 +58,10 @@ const editBtnDialog: IButtonStyles = {
   },
   flexContainer: {
     justifyContent: "start",
+    background: "#transparent",
+    selectors: {
+      ":hover": { background: "#212529" },
+    },
   },
 };
 
@@ -108,19 +115,40 @@ const dialogStyle: IDialogStyles = {
 
 const dialogContentStyles: Partial<IDialogContentStyles> = {
   title: {
-    color: "#dee2e6",
+    color: "#fff",
     fontSize: "35px",
   },
 };
 
 const labelStyles: Partial<ILabelStyles> = {
   root: {
-    color: "#dee2e6",
+    color: "#fff",
   },
 };
+
 const textFieldStyles: Partial<ITextFieldStyles> = {
   subComponentStyles: {
     label: labelStyles,
+  },
+  fieldGroup: {
+    border: "0px",
+    borderBottom: "2px solid #6741d9",
+    selectors: {
+      ":focus-within": {
+        borderBottom: "2px solid #6741d9",
+      },
+      ":hover": {
+        borderBottom: "2px solid #6741d9",
+      },
+      "::after": {
+        border: "0px",
+      },
+    },
+  },
+  field: {
+    color: "#dee2e6",
+    fontSize: "17px",
+    backgroundColor: "#212529",
   },
 };
 
