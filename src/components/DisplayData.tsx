@@ -361,7 +361,7 @@ const DisplayData = () => {
         <Stack
           style={{
             overflowY: "scroll",
-            height: "70vh",
+            height: "65vh",
           }}
         >
           <DetailsList
