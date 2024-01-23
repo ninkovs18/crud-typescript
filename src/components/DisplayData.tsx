@@ -203,35 +203,35 @@ const DisplayData = () => {
       name: "Name",
       fieldName: "name",
       minWidth: 100,
-      maxWidth: 230,
+      maxWidth: 210,
     },
     {
       key: "column2",
       name: "Surname",
       fieldName: "surname",
       minWidth: 100,
-      maxWidth: 230,
+      maxWidth: 210,
     },
     {
       key: "column3",
       name: "User type",
       fieldName: "userType",
       minWidth: 100,
-      maxWidth: 230,
+      maxWidth: 210,
     },
     {
       key: "column4",
       name: "City",
       fieldName: "city",
       minWidth: 100,
-      maxWidth: 230,
+      maxWidth: 210,
     },
     {
       key: "column5",
       name: "Address",
       fieldName: "address",
       minWidth: 100,
-      maxWidth: 230,
+      maxWidth: 210,
     },
     {
       key: "edit",
@@ -360,7 +360,7 @@ const DisplayData = () => {
         </Stack>
         <Stack
           style={{
-            overflowY: "auto",
+            overflowY: "scroll",
             height: "70vh",
           }}
         >
