@@ -82,12 +82,20 @@ const comboBoxStyles: Partial<IDropdownStyles> = {
     maxWidth: "300px",
     backgroundColor: "#2b3035",
   },
+  dropdownItemHeader: {
+    color: "#dee2e6",
+  },
   label: {
     color: "#dee2e6",
   },
   title: {
     backgroundColor: "#343a40",
     color: "#dee2e6",
+    selectors: {
+      ":focus-within": {
+        color: "#fff",
+      },
+    },
   },
   dropdownItem: {
     backgroundColor: "#2b3035",

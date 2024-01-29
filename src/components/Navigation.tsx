@@ -48,7 +48,7 @@ const Navigation = () => {
     link: {
       backgroundColor: "#343a40",
       color: "#fff",
-      borderRadius: "0.75rem",
+      borderBottom: "1px solid #212529",
       selectors: {
         ":hover": { color: "#343a40", fontSize: "20px" },
         ":after": { borderLeft: "5px solid #6741d9" },
