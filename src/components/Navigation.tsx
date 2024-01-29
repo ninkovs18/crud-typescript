@@ -1,12 +1,7 @@
 import { useState } from "react";
 
 import { Nav, initializeIcons } from "@fluentui/react";
-import {
-  INavLink,
-  INavStyles,
-  INavLinkGroup,
-  INavStyleProps,
-} from "@fluentui/react/lib/Nav";
+import { INavLink, INavStyles, INavLinkGroup } from "@fluentui/react/lib/Nav";
 import { useNavigate } from "react-router-dom";
 
 const navLinks: INavLinkGroup[] = [
@@ -34,7 +29,6 @@ const navLinks: INavLinkGroup[] = [
 const Navigation = () => {
   initializeIcons();
   const [selectedKey, setSelectedKey] = useState<string>("1");
-  // const [isSelected, setIsSelected] = useState<INavStyleProps>();
   const navigate = useNavigate();
 
   const handleClick = (ev?: React.MouseEvent<HTMLElement>, item?: INavLink) => {

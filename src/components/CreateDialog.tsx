@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useId, useBoolean } from "@fluentui/react-hooks";
+import { useState, useEffect } from "react";
+import { useBoolean } from "@fluentui/react-hooks";
 import {
   TextField,
   DefaultButton,
@@ -8,7 +8,8 @@ import {
   DialogFooter,
   PrimaryButton,
   Stack,
-  ITextStyles,
+  DialogType,
+  IDialogContentProps,
 } from "@fluentui/react";
 import {
   IButtonStyles,
@@ -35,6 +36,10 @@ const submitStyle: IButtonStyles = {
     backgroundColor: "#7950f2",
     border: "0px",
     color: "#fff",
+  },
+  rootDisabled: {
+    backgroundColor: "#343a40",
+    color: "#918c88",
   },
 };
 const closeBtnStyle: IButtonStyles = {
@@ -89,6 +94,11 @@ const dialogContentStyles: Partial<IDialogContentStyles> = {
     fontSize: "35px",
   },
 };
+const displayNone: Partial<IDialogContentStyles> = {
+  title: {
+    display: "none",
+  },
+};
 
 const labelStyles: Partial<ILabelStyles> = {
   root: {
@@ -136,6 +146,13 @@ interface IPerson {
   address: string;
 }
 
+const dialogContentProps: IDialogContentProps = {
+  type: DialogType.normal,
+  title: "Create person",
+  closeButtonAriaLabel: "Close",
+  styles: dialogContentStyles,
+};
+
 const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
   const [name, setName] = useState<string>("");
   const [surname, setSurName] = useState<string>("");
@@ -145,6 +162,12 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
+  useEffect(() => {
+    if (!hideDialog) {
+      reset();
+    }
+  }, [hideDialog]);
+
   const reset = () => {
     setName("");
     setSurName("");
@@ -153,7 +176,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
     setUserType("");
   };
 
-  const handleAdd = async () => {
+  const checkInput = () => {
     if (
       name === "" ||
       surname === "" ||
@@ -161,8 +184,10 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
       city === "" ||
       address === ""
     )
-      return;
-
+      return true;
+    return false;
+  };
+  const handleAdd = async () => {
     const datum = new Date();
 
     const createdDate = datum.toLocaleDateString("en-US", {
@@ -199,14 +224,15 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
         onDismiss={toggleHideDialog}
         minWidth={400}
         styles={dialogStyle}
+        dialogContentProps={dialogContentProps}
       >
-        <DialogContent title="Create person" styles={dialogContentStyles}>
+        <DialogContent styles={displayNone}>
           <TextField
             type="text"
             label="Name"
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setName(newValue || "")}
           />
@@ -215,7 +241,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             label="Surname"
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setSurName(newValue || "")}
           />
@@ -224,7 +250,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             label="User type"
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserType(newValue || "")}
           />
@@ -233,7 +259,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             label="City"
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setCity(newValue || "")}
           />
@@ -242,7 +268,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             label="Address"
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setAddress(newValue || "")}
           />
@@ -252,6 +278,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
             styles={submitStyle}
             onClick={handleAdd}
             text="Create"
+            disabled={checkInput()}
           />
           <DefaultButton
             onClick={toggleHideDialog}

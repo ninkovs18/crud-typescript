@@ -1,5 +1,4 @@
-import { useMemo } from "react";
-import { useId, useBoolean } from "@fluentui/react-hooks";
+import { useBoolean } from "@fluentui/react-hooks";
 
 import {
   DefaultButton,
@@ -13,8 +12,6 @@ import {
 import {
   IButtonStyles,
   IDialogStyles,
-  ITextFieldStyles,
-  ILabelStyles,
   IDialogContentStyles,
 } from "@fluentui/react";
 
@@ -131,7 +128,7 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
         styles={dialogStyle}
       >
         <DialogContent
-          title="Do you want to delete this person?"
+          title="Delete this person?"
           styles={dialogContentStyles}
         ></DialogContent>
         <DialogFooter>

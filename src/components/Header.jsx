@@ -1,5 +1,3 @@
-import React from "react";
-
 const HeaderStyle = {
   height: "10vh",
   backgroundColor: "#212529",

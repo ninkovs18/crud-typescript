@@ -7,7 +7,7 @@
       "userType": "Moderator",
       "createdDate": "02/04/2022",
       "city": "Example City",
-      "address": "102 Main St"
+      "address": "Paje Marganovica"
     },
     {
       "id": 4,
@@ -65,7 +65,7 @@
     },
     {
       "id": 12,
-      "name": "Pera",
+      "name": "Perica",
       "surname": "Peric",
       "userType": "Admin",
       "createdDate": "12/12/2023",

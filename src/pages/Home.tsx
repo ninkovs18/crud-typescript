@@ -1,4 +1,3 @@
-import React from "react";
 import DisplayData from "../components/DisplayData";
 import { Stack } from "@fluentui/react";
 

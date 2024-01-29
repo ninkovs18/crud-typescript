@@ -1,31 +1,21 @@
-import React, { useEffect, useState, ReactElement } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SelectionMode,
   DetailsList,
   TextField,
   ComboBox,
-  mergeStyles,
   IComboBox,
   IComboBoxOption,
   Stack,
-  IDetailsRowStyles,
   IColumn,
   DetailsRow,
   IDetailsHeaderProps,
   DetailsHeader,
-  IDetailsColumnStyles,
-  ITooltipHostProps,
-  IDetailsColumnRenderTooltipProps,
-  DetailsColumn,
-  DetailsColumnBase,
-  Tooltip,
-  TooltipBase,
 } from "@fluentui/react";
 import {
   ILabelStyles,
   ITextFieldStyles,
   IComboBoxStyles,
-  IDetailsListStyles,
   IRenderFunction,
   IDetailsRowProps,
 } from "@fluentui/react";
@@ -341,9 +331,9 @@ const DisplayData = () => {
             allowFreeInput
             autoComplete="on"
             onChange={(
-              event: React.FormEvent<IComboBox>,
-              option?: IComboBoxOption,
-              index?: number,
+              _event: React.FormEvent<IComboBox>,
+              _option?: IComboBoxOption,
+              _index?: number,
               value?: string
             ) => setType(value || "All")}
             defaultSelectedKey={""}

@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { useId, useBoolean } from "@fluentui/react-hooks";
+import { useState, useEffect } from "react";
+import { useBoolean } from "@fluentui/react-hooks";
 
 import {
   DefaultButton,
@@ -9,6 +9,8 @@ import {
   DialogFooter,
   PrimaryButton,
   Stack,
+  DialogType,
+  IDialogContentProps,
 } from "@fluentui/react";
 
 import {
@@ -83,6 +85,10 @@ const submitStyle: IButtonStyles = {
     border: "0px",
     color: "#fff",
   },
+  rootDisabled: {
+    backgroundColor: "#343a40",
+    color: "#918c88",
+  },
 };
 
 const closeBtnStyle: IButtonStyles = {
@@ -118,6 +124,14 @@ const dialogContentStyles: Partial<IDialogContentStyles> = {
     color: "#fff",
     fontSize: "35px",
   },
+  subText: {
+    display: "none",
+  },
+};
+const displayNone: Partial<IDialogContentStyles> = {
+  title: {
+    display: "none",
+  },
 };
 
 const labelStyles: Partial<ILabelStyles> = {
@@ -152,15 +166,34 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
   },
 };
 
+const dialogContentProps: IDialogContentProps = {
+  type: DialogType.normal,
+  title: "Edit person",
+  closeButtonAriaLabel: "Close",
+  styles: dialogContentStyles,
+};
+
 const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
   const [userEdit, setUserEdit] = useState<IPerson>(user);
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
-  const editOpen = () => {
-    toggleHideDialog();
-    console.log(user);
-    console.log(userEdit);
+  useEffect(() => {
+    if (hideDialog) {
+      setUserEdit(user);
+    }
+  }, [hideDialog]);
+
+  const checkInput = () => {
+    if (
+      userEdit.name === "" ||
+      userEdit.surname === "" ||
+      userEdit.userType === "" ||
+      userEdit.city === "" ||
+      userEdit.address === ""
+    )
+      return true;
+    return false;
   };
 
   const onClickEdit = () => {
@@ -179,7 +212,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
   return (
     <Stack>
       <DefaultButton
-        onClick={editOpen}
+        onClick={toggleHideDialog}
         iconProps={editIcon}
         styles={editBtnDialog}
       />
@@ -189,15 +222,16 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
         onDismiss={toggleHideDialog}
         minWidth={400}
         styles={dialogStyle}
+        dialogContentProps={dialogContentProps}
       >
-        <DialogContent title="Edit person" styles={dialogContentStyles}>
+        <DialogContent styles={displayNone}>
           <TextField
             type="text"
             label="Name"
             styles={textFieldStyles}
             defaultValue={user.name}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, name: newValue || "" })}
           />
@@ -207,7 +241,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             styles={textFieldStyles}
             defaultValue={user.surname}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, surname: newValue || "" })}
           />
@@ -217,7 +251,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             styles={textFieldStyles}
             defaultValue={user.userType}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, userType: newValue || "" })}
           />
@@ -227,7 +261,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             styles={textFieldStyles}
             defaultValue={user.city}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, city: newValue || "" })}
           />
@@ -237,7 +271,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             styles={textFieldStyles}
             defaultValue={user.address}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, address: newValue || "" })}
           />
@@ -247,6 +281,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
             styles={submitStyle}
             onClick={onClickEdit}
             text="Edit"
+            disabled={checkInput()}
           />
           <DefaultButton
             onClick={toggleHideDialog}
