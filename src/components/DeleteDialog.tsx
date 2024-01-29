@@ -5,6 +5,8 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogType,
+  IDialogContentProps,
   PrimaryButton,
   Stack,
 } from "@fluentui/react";
@@ -66,6 +68,12 @@ const dialogContentStyles: Partial<IDialogContentStyles> = {
   },
 };
 
+const displayNone: Partial<IDialogContentStyles> = {
+  title: {
+    display: "none",
+  },
+};
+
 const submitStyle: IButtonStyles = {
   root: {
     backgroundColor: "#7950f2",
@@ -105,6 +113,13 @@ const closeBtnStyle: IButtonStyles = {
   },
 };
 
+const dialogContentProps: IDialogContentProps = {
+  type: DialogType.normal,
+  title: "Delete this person?",
+  closeButtonAriaLabel: "Close",
+  styles: dialogContentStyles,
+};
+
 const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
@@ -126,10 +141,11 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
         onDismiss={toggleHideDialog}
         minWidth={400}
         styles={dialogStyle}
+        dialogContentProps={dialogContentProps}
       >
         <DialogContent
           title="Delete this person?"
-          styles={dialogContentStyles}
+          styles={displayNone}
         ></DialogContent>
         <DialogFooter>
           <PrimaryButton

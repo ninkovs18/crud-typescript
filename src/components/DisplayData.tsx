@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   SelectionMode,
+  Spinner,
   DetailsList,
   TextField,
   ComboBox,
@@ -11,6 +12,13 @@ import {
   DetailsRow,
   IDetailsHeaderProps,
   DetailsHeader,
+  Dropdown,
+  IDropdownOption,
+  IDropdownStyleProps,
+  IDropdownStyles,
+  IDropdownProps,
+  SpinnerSize,
+  ISpinnerStyles,
 } from "@fluentui/react";
 import {
   ILabelStyles,
@@ -68,30 +76,42 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
     backgroundColor: "#2b3035",
   },
 };
-const comboBoxStyles: Partial<IComboBoxStyles> = {
+const comboBoxStyles: Partial<IDropdownStyles> = {
   root: {
+    minWidth: "200px",
     maxWidth: "300px",
-    backgroundColor: "#6741d9",
-    selectors: {
-      ":focus-within": {
-        borderBottom: "0px",
-      },
-      ":hover": {
-        borderBottom: "0px",
-      },
-      "::after": {
-        border: "0px",
-      },
-    },
-  },
-  input: {
-    backgroundColor: "#6741d9",
-  },
-  optionsContainerWrapper: {
-    maxWidth: "300px",
+    backgroundColor: "#2b3035",
   },
   label: {
     color: "#dee2e6",
+  },
+  title: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+  },
+  dropdownItem: {
+    backgroundColor: "#2b3035",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
+  },
+  caretDown: {
+    color: "#6741d9",
+    fontWeight: "bolder",
+  },
+  dropdownItemSelected: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
   },
 };
 
@@ -99,13 +119,16 @@ const DisplayData = () => {
   const [data, setData] = useState<IPerson[]>([]);
   const [search, setSearch] = useState<string>("");
   const [type, setType] = useState<string>("All");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const response = await fetch("http://localhost:3003/persons");
       const data = await response.json();
       console.log(data);
       setData(data);
+      setIsLoading(false);
     };
     fetchData();
   }, []);
@@ -311,6 +334,15 @@ const DisplayData = () => {
     return null;
   };
 
+  const spinnerStyle: ISpinnerStyles = {
+    circle: {
+      height: 100,
+      width: 100,
+      borderWidth: 4,
+      borderColor: "#6741d9 rgb(199, 224, 244) rgb(199, 224, 244)",
+    },
+  };
+
   return (
     <Stack>
       <Stack style={{ padding: "40px" }}>
@@ -324,20 +356,18 @@ const DisplayData = () => {
               newValue?: string
             ) => setSearch(newValue || "")}
           />
-          <ComboBox
+          <Dropdown
+            placeholder="Select an option"
             label="Filter by user type:"
             options={userTypes}
             styles={comboBoxStyles}
-            allowFreeInput
-            autoComplete="on"
             onChange={(
-              _event: React.FormEvent<IComboBox>,
-              _option?: IComboBoxOption,
-              _index?: number,
-              value?: string
-            ) => setType(value || "All")}
-            defaultSelectedKey={""}
+              _event: React.FormEvent<HTMLDivElement>,
+              option?: IDropdownOption,
+              _index?: number
+            ) => setType(option?.text || "All")}
           />
+
           <Stack
             style={{
               justifyContent: "center",
@@ -354,22 +384,71 @@ const DisplayData = () => {
             height: "65vh",
           }}
         >
-          <DetailsList
-            columns={columns}
-            items={filterData}
-            setKey="multiple"
-            selectionMode={SelectionMode.none}
-            onShouldVirtualize={() => false}
-            onRenderRow={onRenderRow}
-            onRenderDetailsHeader={onRenderDetailsHeader}
-          />
-          {!data.length && (
-            <p style={{ textAlign: "center", color: "#fff" }}>
+          {isLoading && (
+            <Stack
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Spinner styles={spinnerStyle} />
+            </Stack>
+          )}
+          {!isLoading && (
+            <DetailsList
+              columns={columns}
+              items={filterData}
+              setKey="multiple"
+              selectionMode={SelectionMode.none}
+              onShouldVirtualize={() => false}
+              onRenderRow={onRenderRow}
+              onRenderDetailsHeader={onRenderDetailsHeader}
+            />
+          )}
+          {!isLoading && !data.length && (
+            <p
+              style={{
+                textAlign: "center",
+                color: "#fff",
+                fontSize: "25px",
+                marginTop: "20px",
+              }}
+            >
+              <img
+                src="/nodata.svg"
+                alt="nodata"
+                style={{
+                  width: "30vh",
+                  height: "30vh",
+                  display: "block",
+                  margin: "0 auto",
+                }}
+              />
               there is no person in the list
             </p>
           )}
-          {!filterData.length && (
-            <p style={{ textAlign: "center", color: "#fff" }}>
+          {!isLoading && !filterData.length && (
+            <p
+              style={{
+                textAlign: "center",
+                color: "#fff",
+                fontSize: "25px",
+                marginTop: "20px",
+              }}
+            >
+              <img
+                src="/nodata.svg"
+                alt="nodata"
+                style={{
+                  width: "30vh",
+                  height: "30vh",
+                  display: "block",
+                  margin: "0 auto",
+                }}
+              />
               There is no result for the given search filter
             </p>
           )}
