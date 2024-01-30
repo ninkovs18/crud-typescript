@@ -10,6 +10,9 @@ import {
   Stack,
   DialogType,
   IDialogContentProps,
+  Dropdown,
+  IDropdownOption,
+  IDropdownStyles,
 } from "@fluentui/react";
 import {
   IButtonStyles,
@@ -18,6 +21,27 @@ import {
   ILabelStyles,
   IDialogContentStyles,
 } from "@fluentui/react";
+
+interface IUserType {
+  text: string;
+  key: string;
+}
+
+type CreateDialogProps = {
+  data: IPerson[];
+  handleAddPerson: (newPerson: IPerson) => Promise<void>;
+  userTypes: IUserType[];
+};
+
+interface IPerson {
+  id: number;
+  name: string;
+  surname: string;
+  userType: string;
+  createdDate: string;
+  city: string;
+  address: string;
+}
 
 const submitStyle: IButtonStyles = {
   root: {
@@ -131,20 +155,53 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
   },
 };
 
-type CreateDialogProps = {
-  data: IPerson[];
-  handleAddPerson: (newPerson: IPerson) => Promise<void>;
+const dropdownStyles: Partial<IDropdownStyles> = {
+  root: {
+    minWidth: "200px",
+    maxWidth: "300px",
+    backgroundColor: "#2b3035",
+    marginTop: "20px",
+  },
+  dropdownItemHeader: {
+    color: "#dee2e6",
+  },
+  label: {
+    display: "none",
+  },
+  title: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+    selectors: {
+      ":focus-within": {
+        color: "#fff",
+      },
+    },
+  },
+  dropdownItem: {
+    backgroundColor: "#2b3035",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
+  },
+  caretDown: {
+    color: "#6741d9",
+    fontWeight: "bolder",
+  },
+  dropdownItemSelected: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
+  },
 };
-
-interface IPerson {
-  id: number;
-  name: string;
-  surname: string;
-  userType: string;
-  createdDate: string;
-  city: string;
-  address: string;
-}
 
 const dialogContentProps: IDialogContentProps = {
   type: DialogType.normal,
@@ -153,7 +210,11 @@ const dialogContentProps: IDialogContentProps = {
   styles: dialogContentStyles,
 };
 
-const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
+const CreateDialog = ({
+  data,
+  handleAddPerson,
+  userTypes,
+}: CreateDialogProps) => {
   const [name, setName] = useState<string>("");
   const [surname, setSurName] = useState<string>("");
   const [userType, setUserType] = useState<string>("");
@@ -181,6 +242,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
       name === "" ||
       surname === "" ||
       userType === "" ||
+      userType === "All" ||
       city === "" ||
       address === ""
     )
@@ -245,15 +307,7 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
               newValue?: string
             ) => setSurName(newValue || "")}
           />
-          <TextField
-            type="text"
-            label="User type"
-            styles={textFieldStyles}
-            onChange={(
-              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-              newValue?: string
-            ) => setUserType(newValue || "")}
-          />
+
           <TextField
             type="text"
             label="City"
@@ -271,6 +325,16 @@ const CreateDialog = ({ data, handleAddPerson }: CreateDialogProps) => {
               _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setAddress(newValue || "")}
+          />
+          <Dropdown
+            placeholder="User type"
+            options={userTypes}
+            styles={dropdownStyles}
+            onChange={(
+              _event: React.FormEvent<HTMLDivElement>,
+              option?: IDropdownOption,
+              _index?: number
+            ) => setUserType(option?.text || "All")}
           />
         </DialogContent>
         <DialogFooter>

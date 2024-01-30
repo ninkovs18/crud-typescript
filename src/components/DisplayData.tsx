@@ -4,9 +4,6 @@ import {
   Spinner,
   DetailsList,
   TextField,
-  ComboBox,
-  IComboBox,
-  IComboBoxOption,
   Stack,
   IColumn,
   DetailsRow,
@@ -14,16 +11,12 @@ import {
   DetailsHeader,
   Dropdown,
   IDropdownOption,
-  IDropdownStyleProps,
   IDropdownStyles,
-  IDropdownProps,
-  SpinnerSize,
   ISpinnerStyles,
 } from "@fluentui/react";
 import {
   ILabelStyles,
   ITextFieldStyles,
-  IComboBoxStyles,
   IRenderFunction,
   IDetailsRowProps,
 } from "@fluentui/react";
@@ -42,11 +35,17 @@ interface IPerson {
   address: string;
 }
 
+interface IUserType {
+  text: string;
+  key: string;
+}
+
 const labelStyles: Partial<ILabelStyles> = {
   root: {
     color: "#dee2e6",
   },
 };
+
 const textFieldStyles: Partial<ITextFieldStyles> = {
   subComponentStyles: {
     label: labelStyles,
@@ -76,7 +75,7 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
     backgroundColor: "#2b3035",
   },
 };
-const comboBoxStyles: Partial<IDropdownStyles> = {
+const dropdownStyles: Partial<IDropdownStyles> = {
   root: {
     minWidth: "200px",
     maxWidth: "300px",
@@ -141,7 +140,7 @@ const DisplayData = () => {
     fetchData();
   }, []);
 
-  const userTypes = data.reduce(
+  const userTypes: IUserType[] = data.reduce(
     (arr, type) => {
       if (!arr.map((el) => el.text).includes(type.userType))
         return [
@@ -152,8 +151,8 @@ const DisplayData = () => {
     },
     [
       {
-        key: "",
         text: "All",
+        key: "",
       },
     ]
   );
@@ -262,7 +261,7 @@ const DisplayData = () => {
       maxWidth: 70,
 
       onRender: (item: IPerson) => (
-        <EditDialog handleEdit={handleEdit} user={item} />
+        <EditDialog handleEdit={handleEdit} user={item} userTypes={userTypes} />
       ),
     },
     {
@@ -368,7 +367,7 @@ const DisplayData = () => {
             placeholder="Select an option"
             label="Filter by user type:"
             options={userTypes}
-            styles={comboBoxStyles}
+            styles={dropdownStyles}
             onChange={(
               _event: React.FormEvent<HTMLDivElement>,
               option?: IDropdownOption,
@@ -383,7 +382,11 @@ const DisplayData = () => {
               alignItems: "end",
             }}
           >
-            <CreateDialog data={data} handleAddPerson={handleAddPerson} />
+            <CreateDialog
+              data={data}
+              handleAddPerson={handleAddPerson}
+              userTypes={userTypes}
+            />
           </Stack>
         </Stack>
         <Stack

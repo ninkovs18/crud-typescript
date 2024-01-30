@@ -11,6 +11,9 @@ import {
   Stack,
   DialogType,
   IDialogContentProps,
+  Dropdown,
+  IDropdownOption,
+  IDropdownStyles,
 } from "@fluentui/react";
 
 import {
@@ -21,9 +24,15 @@ import {
   IDialogContentStyles,
 } from "@fluentui/react";
 
+interface IUserType {
+  text: string;
+  key: string;
+}
+
 type EditDialogProps = {
   user: IPerson;
   handleEdit: (editUser: IPerson) => Promise<void>;
+  userTypes: IUserType[];
 };
 
 interface IPerson {
@@ -140,6 +149,54 @@ const labelStyles: Partial<ILabelStyles> = {
   },
 };
 
+const dropdownStyles: Partial<IDropdownStyles> = {
+  root: {
+    minWidth: "200px",
+    maxWidth: "300px",
+    backgroundColor: "#2b3035",
+    marginTop: "20px",
+  },
+  dropdownItemHeader: {
+    color: "#dee2e6",
+  },
+  label: {
+    display: "none",
+  },
+  title: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+    selectors: {
+      ":focus-within": {
+        color: "#fff",
+      },
+    },
+  },
+  dropdownItem: {
+    backgroundColor: "#2b3035",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
+  },
+  caretDown: {
+    color: "#6741d9",
+    fontWeight: "bolder",
+  },
+  dropdownItemSelected: {
+    backgroundColor: "#343a40",
+    color: "#dee2e6",
+    selectors: {
+      ":hover": {
+        backgroundColor: "#6741d9",
+        color: "white",
+      },
+    },
+  },
+};
+
 const textFieldStyles: Partial<ITextFieldStyles> = {
   subComponentStyles: {
     label: labelStyles,
@@ -173,7 +230,7 @@ const dialogContentProps: IDialogContentProps = {
   styles: dialogContentStyles,
 };
 
-const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
+const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
   const [userEdit, setUserEdit] = useState<IPerson>(user);
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
@@ -182,13 +239,14 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
     if (hideDialog) {
       setUserEdit(user);
     }
-  }, [hideDialog]);
+  }, [hideDialog, user]);
 
   const checkInput = () => {
     if (
       userEdit.name === "" ||
       userEdit.surname === "" ||
       userEdit.userType === "" ||
+      userEdit.userType === "All" ||
       userEdit.city === "" ||
       userEdit.address === ""
     )
@@ -197,14 +255,6 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
   };
 
   const onClickEdit = () => {
-    if (
-      userEdit.name === "" ||
-      userEdit.surname === "" ||
-      userEdit.userType === "" ||
-      userEdit.city === "" ||
-      userEdit.address === ""
-    )
-      return;
     handleEdit(userEdit);
     toggleHideDialog();
   };
@@ -245,16 +295,7 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
               newValue?: string
             ) => setUserEdit({ ...userEdit, surname: newValue || "" })}
           />
-          <TextField
-            type="text"
-            label="User type"
-            styles={textFieldStyles}
-            defaultValue={user.userType}
-            onChange={(
-              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-              newValue?: string
-            ) => setUserEdit({ ...userEdit, userType: newValue || "" })}
-          />
+
           <TextField
             type="text"
             label="City"
@@ -274,6 +315,17 @@ const EditDialog = ({ user, handleEdit }: EditDialogProps) => {
               _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setUserEdit({ ...userEdit, address: newValue || "" })}
+          />
+          <Dropdown
+            placeholder="User type"
+            options={userTypes}
+            styles={dropdownStyles}
+            selectedKey={userEdit.userType.toLowerCase()}
+            onChange={(
+              _event: React.FormEvent<HTMLDivElement>,
+              option?: IDropdownOption,
+              _index?: number
+            ) => setUserEdit({ ...userEdit, userType: option?.text || "All" })}
           />
         </DialogContent>
         <DialogFooter>
