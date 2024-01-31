@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../App.css";
 import {
   SelectionMode,
   Spinner,
@@ -13,6 +14,8 @@ import {
   IDropdownOption,
   IDropdownStyles,
   ISpinnerStyles,
+  IDropdownProps,
+  Icon,
 } from "@fluentui/react";
 import {
   ILabelStyles,
@@ -88,11 +91,17 @@ const dropdownStyles: Partial<IDropdownStyles> = {
     color: "#dee2e6",
   },
   title: {
-    backgroundColor: "#343a40",
-    color: "#dee2e6",
+    backgroundColor: "#2b3035",
+    border: 0,
     selectors: {
-      ":focus-within": {
-        color: "#fff",
+      ":after": { border: "0px" },
+    },
+  },
+  dropdown: {
+    borderBottom: "2px solid #6741d9",
+    selectors: {
+      "::after": {
+        border: "0",
       },
     },
   },
@@ -106,10 +115,6 @@ const dropdownStyles: Partial<IDropdownStyles> = {
       },
     },
   },
-  caretDown: {
-    color: "#6741d9",
-    fontWeight: "bolder",
-  },
   dropdownItemSelected: {
     backgroundColor: "#343a40",
     color: "#dee2e6",
@@ -119,6 +124,15 @@ const dropdownStyles: Partial<IDropdownStyles> = {
         color: "white",
       },
     },
+  },
+};
+
+const spinnerStyle: ISpinnerStyles = {
+  circle: {
+    height: 100,
+    width: 100,
+    borderWidth: 4,
+    borderColor: "#6741d9 rgb(199, 224, 244) rgb(199, 224, 244)",
   },
 };
 
@@ -341,13 +355,42 @@ const DisplayData = () => {
     return null;
   };
 
-  const spinnerStyle: ISpinnerStyles = {
-    circle: {
-      height: 100,
-      width: 100,
-      borderWidth: 4,
-      borderColor: "#6741d9 rgb(199, 224, 244) rgb(199, 224, 244)",
-    },
+  const onRenderTitle: IRenderFunction<IDropdownOption[]> = (options) => {
+    if (options) {
+      const option = options[0];
+      return <span style={{ color: "#fff" }}>{option?.text}</span>;
+    }
+    return null;
+  };
+
+  const onRenderCaretDown: IRenderFunction<IDropdownProps> = (props) => {
+    if (props) {
+      return (
+        <span style={{ color: "#6741d9", fontSize: "18px" }}>
+          <Icon iconName="ChevronDown" />
+        </span>
+      );
+    }
+    return null;
+  };
+
+  const onRenderPlaceholder: IRenderFunction<IDropdownProps> = (props) => {
+    if (props) {
+      return (
+        <div style={{ color: "#fff" }}>
+          <span>{props.placeholder}</span>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const onChange = (
+    event: React.FormEvent<HTMLDivElement>,
+    option?: IDropdownOption,
+    _index?: number
+  ) => {
+    setType(option?.text || "All");
   };
 
   return (
@@ -368,11 +411,10 @@ const DisplayData = () => {
             label="Filter by user type:"
             options={userTypes}
             styles={dropdownStyles}
-            onChange={(
-              _event: React.FormEvent<HTMLDivElement>,
-              option?: IDropdownOption,
-              _index?: number
-            ) => setType(option?.text || "All")}
+            onChange={onChange}
+            onRenderTitle={onRenderTitle}
+            onRenderCaretDown={onRenderCaretDown}
+            onRenderPlaceholder={onRenderPlaceholder}
           />
 
           <Stack

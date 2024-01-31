@@ -14,6 +14,9 @@ import {
   Dropdown,
   IDropdownOption,
   IDropdownStyles,
+  IRenderFunction,
+  IDropdownProps,
+  Icon,
 } from "@fluentui/react";
 
 import {
@@ -160,14 +163,20 @@ const dropdownStyles: Partial<IDropdownStyles> = {
     color: "#dee2e6",
   },
   label: {
-    display: "none",
+    displaya: "none",
   },
   title: {
-    backgroundColor: "#343a40",
-    color: "#dee2e6",
+    backgroundColor: "#212529",
+    border: 0,
     selectors: {
-      ":focus-within": {
-        color: "#fff",
+      ":after": { border: "0px" },
+    },
+  },
+  dropdown: {
+    borderBottom: "2px solid #6741d9",
+    selectors: {
+      "::after": {
+        border: "0",
       },
     },
   },
@@ -180,10 +189,6 @@ const dropdownStyles: Partial<IDropdownStyles> = {
         color: "white",
       },
     },
-  },
-  caretDown: {
-    color: "#6741d9",
-    fontWeight: "bolder",
   },
   dropdownItemSelected: {
     backgroundColor: "#343a40",
@@ -259,6 +264,43 @@ const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
     toggleHideDialog();
   };
 
+  const onRenderTitle: IRenderFunction<IDropdownOption[]> = (options) => {
+    if (options) {
+      const option = options[0];
+      return <span style={{ color: "#fff" }}>{option?.text}</span>;
+    }
+    return null;
+  };
+
+  const onRenderCaretDown: IRenderFunction<IDropdownProps> = (props) => {
+    if (props) {
+      return (
+        <span style={{ color: "#6741d9", fontSize: "18px" }}>
+          <Icon iconName="ChevronDown" />
+        </span>
+      );
+    }
+    return null;
+  };
+
+  const onRenderPlaceholder: IRenderFunction<IDropdownProps> = (props) => {
+    if (props) {
+      return (
+        <div style={{ color: "#fff" }}>
+          <span>{props.placeholder}</span>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const onChange = (
+    event: React.FormEvent<HTMLDivElement>,
+    option?: IDropdownOption,
+    _index?: number
+  ) => {
+    setUserEdit({ ...userEdit, userType: option?.text || "All" });
+  };
   return (
     <Stack>
       <DefaultButton
@@ -317,15 +359,14 @@ const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
             ) => setUserEdit({ ...userEdit, address: newValue || "" })}
           />
           <Dropdown
-            placeholder="User type"
+            placeholder="Select an option"
             options={userTypes}
             styles={dropdownStyles}
             selectedKey={userEdit.userType.toLowerCase()}
-            onChange={(
-              _event: React.FormEvent<HTMLDivElement>,
-              option?: IDropdownOption,
-              _index?: number
-            ) => setUserEdit({ ...userEdit, userType: option?.text || "All" })}
+            onChange={onChange}
+            onRenderTitle={onRenderTitle}
+            onRenderCaretDown={onRenderCaretDown}
+            onRenderPlaceholder={onRenderPlaceholder}
           />
         </DialogContent>
         <DialogFooter>
