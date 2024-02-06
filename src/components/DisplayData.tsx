@@ -16,6 +16,7 @@ import {
   ISpinnerStyles,
   IDropdownProps,
   Icon,
+  memoizeFunction,
 } from "@fluentui/react";
 import {
   ILabelStyles,
@@ -140,7 +141,8 @@ const DisplayData = () => {
   const [data, setData] = useState<IPerson[]>([]);
   const [search, setSearch] = useState<string>("");
   const [type, setType] = useState<string>("All");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [sort, setSort] = useState<keyof IPerson>("name");
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -153,23 +155,6 @@ const DisplayData = () => {
     };
     fetchData();
   }, []);
-
-  const userTypes: IUserType[] = data.reduce(
-    (arr, type) => {
-      if (!arr.map((el) => el.text).includes(type.userType))
-        return [
-          ...arr,
-          { text: type.userType, key: type.userType.toLowerCase() },
-        ];
-      else return arr;
-    },
-    [
-      {
-        text: "All",
-        key: "",
-      },
-    ]
-  );
 
   const handleAddPerson = async (newPerson: IPerson) => {
     setData((data) => [...data, newPerson]);
@@ -218,54 +203,41 @@ const DisplayData = () => {
     console.log(result);
   };
 
-  const filterData =
-    type === "All"
-      ? data.filter((d) =>
-          d.name.toLowerCase().includes(search.toLocaleLowerCase())
-        )
-      : search
-      ? data
-          .filter((d) =>
-            d.name.toLowerCase().includes(search.toLocaleLowerCase())
-          )
-          .filter((d) => d.userType === type)
-      : data.filter((d) => d.userType === type);
-
   const columns: IColumn[] = [
     {
       key: "column1",
       name: "Name",
       fieldName: "name",
-      minWidth: 100,
-      maxWidth: 210,
+      minWidth: 150,
+      maxWidth: 200,
     },
     {
       key: "column2",
       name: "Surname",
       fieldName: "surname",
-      minWidth: 100,
-      maxWidth: 210,
+      minWidth: 150,
+      maxWidth: 200,
     },
     {
       key: "column3",
       name: "User type",
       fieldName: "userType",
-      minWidth: 100,
-      maxWidth: 210,
+      minWidth: 150,
+      maxWidth: 200,
     },
     {
       key: "column4",
       name: "City",
       fieldName: "city",
-      minWidth: 100,
-      maxWidth: 210,
+      minWidth: 150,
+      maxWidth: 200,
     },
     {
       key: "column5",
       name: "Address",
       fieldName: "address",
-      minWidth: 100,
-      maxWidth: 210,
+      minWidth: 150,
+      maxWidth: 200,
     },
     {
       key: "edit",
@@ -290,6 +262,68 @@ const DisplayData = () => {
       ),
     },
   ];
+
+  const userTypes: IUserType[] = data.reduce(
+    (arr, type) => {
+      if (!arr.map((el) => el.text).includes(type.userType))
+        return [
+          ...arr,
+          { text: type.userType, key: type.userType.toLowerCase() },
+        ];
+      else return arr;
+    },
+    [
+      {
+        text: "All",
+        key: "",
+      },
+    ]
+  );
+
+  const columnNames = columns.map((column) => {
+    return {
+      text: column.name,
+      key: column.name.toLocaleLowerCase()
+    }
+  }).filter((column) => column.text !== "Delete" && column.text !== "Edit")
+
+
+
+const filteredData = memoizeFunction((data: IPerson[], type: string, search: string): IPerson[] => {
+  if (type !== 'All' && search !== "") {
+    return data.filter(person => {
+      return person.name.toLowerCase().includes(search.toLocaleLowerCase()) && person.userType === type
+    })
+  }else if(type === "All" && search !== ""){
+    return data.filter((person) => person.name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }else if(type !== "All" && search === ""){
+    return data.filter((person) => person.userType === type)
+  }
+  return data;
+}) 
+
+  const sortedData = (data: IPerson[], sort : keyof IPerson) : IPerson[] => {
+    return [...data].sort((a, b) => {
+      if(sort){
+        const aSort = a[sort]
+        const bSort = b[sort];
+
+        if(typeof aSort=== typeof bSort){
+          if (aSort < bSort) {
+            return -1;
+          }
+          if (aSort > bSort) {
+            return 1;
+          }
+          return 0;
+        }else{
+          return 0;
+        }
+      }
+      return 0;
+    })
+  }
+
 
   const onRenderRow: IRenderFunction<IDetailsRowProps> = (props) => {
     if (props) {
@@ -385,24 +419,30 @@ const DisplayData = () => {
     return null;
   };
 
-  const onChange = (
-    event: React.FormEvent<HTMLDivElement>,
+  const onChangeType = (
+    _event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption,
     _index?: number
   ) => {
     setType(option?.text || "All");
   };
-
+  const onChangeSort = (
+    _event: React.FormEvent<HTMLDivElement>,
+    option?: IDropdownOption,
+    _index?: number
+  ) => {
+    setSort(option?.text.toLocaleLowerCase() as keyof IPerson || "")
+  }
   return (
     <Stack>
-      <Stack style={{ padding: "40px" }}>
-        <Stack horizontal style={{ padding: "0px 20px" }}>
+      <Stack tokens={{padding: 40}}>
+        <Stack horizontal tokens={{childrenGap: 20}}>
           <TextField
             label="Filter by name:"
             value={search}
             styles={textFieldStyles}
             onChange={(
-              event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+              _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
               newValue?: string
             ) => setSearch(newValue || "")}
           />
@@ -411,12 +451,21 @@ const DisplayData = () => {
             label="Filter by user type:"
             options={userTypes}
             styles={dropdownStyles}
-            onChange={onChange}
+            onChange={onChangeType}
             onRenderTitle={onRenderTitle}
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
           />
-
+          <Dropdown 
+          placeholder="Select an option"
+          label="Sort data:"
+          options={columnNames}
+          styles={dropdownStyles}
+          onChange={onChangeSort}
+          onRenderTitle={onRenderTitle}
+            onRenderCaretDown={onRenderCaretDown}
+            onRenderPlaceholder={onRenderPlaceholder}
+          />
           <Stack
             style={{
               justifyContent: "center",
@@ -439,13 +488,9 @@ const DisplayData = () => {
         >
           {isLoading && (
             <Stack
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+            grow={1}
+            horizontalAlign="center"
+            verticalAlign="center"
             >
               <Spinner styles={spinnerStyle} />
             </Stack>
@@ -453,7 +498,7 @@ const DisplayData = () => {
           {!isLoading && (
             <DetailsList
               columns={columns}
-              items={filterData}
+              items={sortedData(filteredData(data, type, search), sort)}
               setKey="multiple"
               selectionMode={SelectionMode.none}
               onShouldVirtualize={() => false}
@@ -483,7 +528,7 @@ const DisplayData = () => {
               there is no person in the list
             </p>
           )}
-          {!isLoading && !filterData.length && (
+          {!isLoading && !filteredData(data, type, search).length && (
             <p
               style={{
                 textAlign: "center",

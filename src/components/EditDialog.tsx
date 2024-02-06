@@ -246,6 +246,7 @@ const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
     }
   }, [hideDialog, user]);
 
+  // fast-deepequal
   const checkInput = () => {
     if (
       userEdit.name === "" ||
