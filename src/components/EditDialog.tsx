@@ -247,14 +247,17 @@ const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
   }, [hideDialog, user]);
 
   // fast-deepequal
+
   const checkInput = () => {
+    const equal = require("fast-deep-equal");
     if (
       userEdit.name === "" ||
       userEdit.surname === "" ||
       userEdit.userType === "" ||
       userEdit.userType === "All" ||
       userEdit.city === "" ||
-      userEdit.address === ""
+      userEdit.address === "" ||
+      equal(user, userEdit)
     )
       return true;
     return false;

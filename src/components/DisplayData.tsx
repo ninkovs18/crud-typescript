@@ -141,7 +141,8 @@ const DisplayData = () => {
   const [data, setData] = useState<IPerson[]>([]);
   const [search, setSearch] = useState<string>("");
   const [type, setType] = useState<string>("All");
-  const [sort, setSort] = useState<keyof IPerson>("name");
+  const [sortColumn, setSortColumn] = useState<keyof IPerson>("name");
+  const [sortDirection, setSortDirection] = useState<string>("asc");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -205,35 +206,35 @@ const DisplayData = () => {
 
   const columns: IColumn[] = [
     {
-      key: "column1",
+      key: "name",
       name: "Name",
       fieldName: "name",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      key: "column2",
+      key: "surname",
       name: "Surname",
       fieldName: "surname",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      key: "column3",
+      key: "userType",
       name: "User type",
       fieldName: "userType",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      key: "column4",
+      key: "city",
       name: "City",
       fieldName: "city",
       minWidth: 150,
       maxWidth: 200,
     },
     {
-      key: "column5",
+      key: "address",
       name: "Address",
       fieldName: "address",
       minWidth: 150,
@@ -284,7 +285,7 @@ const DisplayData = () => {
     .map((column) => {
       return {
         text: column.name,
-        key: column.name.toLocaleLowerCase(),
+        key: column.key,
       };
     })
     .filter((column) => column.text !== "Delete" && column.text !== "Edit");
@@ -309,20 +310,23 @@ const DisplayData = () => {
     }
   );
 
-  const sortedData = (data: IPerson[], sort: keyof IPerson): IPerson[] => {
+  const sortedData = (
+    data: IPerson[],
+    sortColumn: keyof IPerson,
+    sortDirection: string
+  ): IPerson[] => {
     return [...data].sort((a, b) => {
-      if (sort) {
-        const aSort = a[sort];
-        const bSort = b[sort];
+      if (sortColumn) {
+        const aSort = a[sortColumn];
+        const bSort = b[sortColumn];
 
         if (typeof aSort === typeof bSort) {
-          if (aSort < bSort) {
-            return -1;
+          switch (sortDirection) {
+            case "asc":
+              return aSort > bSort ? 1 : -1;
+            case "desc":
+              return bSort > aSort ? 1 : -1;
           }
-          if (aSort > bSort) {
-            return 1;
-          }
-          return 0;
         } else {
           return 0;
         }
@@ -425,19 +429,6 @@ const DisplayData = () => {
     return null;
   };
 
-  const setColumnName = (name: string): string => {
-    if (name !== null) {
-      const newName = name.split(" ");
-      newName[0] = newName[0].toLowerCase();
-      if (newName[1]) {
-        newName[1] = newName[1].charAt(0).toUpperCase() + newName[1].slice(1);
-      }
-      console.log(newName.join(""));
-      return newName.join("");
-    }
-    return "";
-  };
-
   const onChangeType = (
     _event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption,
@@ -450,7 +441,15 @@ const DisplayData = () => {
     option?: IDropdownOption,
     _index?: number
   ) => {
-    setSort((setColumnName(option!.text) as keyof IPerson) || "");
+    setSortColumn((option?.key as keyof IPerson) || "");
+  };
+
+  const onChangeSortDirection = (
+    event: React.FormEvent<HTMLDivElement>,
+    option?: IDropdownOption,
+    _index?: number
+  ) => {
+    setSortDirection(String(option?.key));
   };
   return (
     <Stack>
@@ -477,10 +476,30 @@ const DisplayData = () => {
           />
           <Dropdown
             placeholder="Select an option"
-            label="Sort data:"
+            label="Sort data by:"
             options={columnNames}
             styles={dropdownStyles}
             onChange={onChangeSort}
+            onRenderTitle={onRenderTitle}
+            onRenderCaretDown={onRenderCaretDown}
+            onRenderPlaceholder={onRenderPlaceholder}
+          />
+          <Dropdown
+            placeholder="Select an option"
+            label="Sort direction:"
+            options={[
+              {
+                text: "A-Z",
+                key: "asc",
+              },
+              {
+                text: "Z-A",
+                key: "desc",
+              },
+            ]}
+            selectedKey={sortDirection}
+            onChange={onChangeSortDirection}
+            styles={dropdownStyles}
             onRenderTitle={onRenderTitle}
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
@@ -513,7 +532,11 @@ const DisplayData = () => {
           {!isLoading && (
             <DetailsList
               columns={columns}
-              items={sortedData(filteredData(data, type, search), sort)}
+              items={sortedData(
+                filteredData(data, type, search),
+                sortColumn,
+                sortDirection
+              )}
               setKey="multiple"
               selectionMode={SelectionMode.none}
               onShouldVirtualize={() => false}
