@@ -142,7 +142,7 @@ const DisplayData = () => {
   const [search, setSearch] = useState<string>("");
   const [type, setType] = useState<string>("All");
   const [sort, setSort] = useState<keyof IPerson>("name");
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -280,35 +280,42 @@ const DisplayData = () => {
     ]
   );
 
-  const columnNames = columns.map((column) => {
-    return {
-      text: column.name,
-      key: column.name.toLocaleLowerCase()
-    }
-  }).filter((column) => column.text !== "Delete" && column.text !== "Edit")
-
-
-
-const filteredData = memoizeFunction((data: IPerson[], type: string, search: string): IPerson[] => {
-  if (type !== 'All' && search !== "") {
-    return data.filter(person => {
-      return person.name.toLowerCase().includes(search.toLocaleLowerCase()) && person.userType === type
+  const columnNames = columns
+    .map((column) => {
+      return {
+        text: column.name,
+        key: column.name.toLocaleLowerCase(),
+      };
     })
-  }else if(type === "All" && search !== ""){
-    return data.filter((person) => person.name.toLowerCase().includes(search.toLocaleLowerCase()))
-  }else if(type !== "All" && search === ""){
-    return data.filter((person) => person.userType === type)
-  }
-  return data;
-}) 
+    .filter((column) => column.text !== "Delete" && column.text !== "Edit");
 
-  const sortedData = (data: IPerson[], sort : keyof IPerson) : IPerson[] => {
+  const filteredData = memoizeFunction(
+    (data: IPerson[], type: string, search: string): IPerson[] => {
+      if (type !== "All" && search !== "") {
+        return data.filter((person) => {
+          return (
+            person.name.toLowerCase().includes(search.toLocaleLowerCase()) &&
+            person.userType === type
+          );
+        });
+      } else if (type === "All" && search !== "") {
+        return data.filter((person) =>
+          person.name.toLowerCase().includes(search.toLocaleLowerCase())
+        );
+      } else if (type !== "All" && search === "") {
+        return data.filter((person) => person.userType === type);
+      }
+      return data;
+    }
+  );
+
+  const sortedData = (data: IPerson[], sort: keyof IPerson): IPerson[] => {
     return [...data].sort((a, b) => {
-      if(sort){
-        const aSort = a[sort]
+      if (sort) {
+        const aSort = a[sort];
         const bSort = b[sort];
 
-        if(typeof aSort=== typeof bSort){
+        if (typeof aSort === typeof bSort) {
           if (aSort < bSort) {
             return -1;
           }
@@ -316,14 +323,13 @@ const filteredData = memoizeFunction((data: IPerson[], type: string, search: str
             return 1;
           }
           return 0;
-        }else{
+        } else {
           return 0;
         }
       }
       return 0;
-    })
-  }
-
+    });
+  };
 
   const onRenderRow: IRenderFunction<IDetailsRowProps> = (props) => {
     if (props) {
@@ -419,6 +425,19 @@ const filteredData = memoizeFunction((data: IPerson[], type: string, search: str
     return null;
   };
 
+  const setColumnName = (name: string): string => {
+    if (name !== null) {
+      const newName = name.split(" ");
+      newName[0] = newName[0].toLowerCase();
+      if (newName[1]) {
+        newName[1] = newName[1].charAt(0).toUpperCase() + newName[1].slice(1);
+      }
+      console.log(newName.join(""));
+      return newName.join("");
+    }
+    return "";
+  };
+
   const onChangeType = (
     _event: React.FormEvent<HTMLDivElement>,
     option?: IDropdownOption,
@@ -431,12 +450,12 @@ const filteredData = memoizeFunction((data: IPerson[], type: string, search: str
     option?: IDropdownOption,
     _index?: number
   ) => {
-    setSort(option?.text.toLocaleLowerCase() as keyof IPerson || "")
-  }
+    setSort((setColumnName(option!.text) as keyof IPerson) || "");
+  };
   return (
     <Stack>
-      <Stack tokens={{padding: 40}}>
-        <Stack horizontal tokens={{childrenGap: 20}}>
+      <Stack tokens={{ padding: 40 }}>
+        <Stack horizontal tokens={{ childrenGap: 20 }}>
           <TextField
             label="Filter by name:"
             value={search}
@@ -456,13 +475,13 @@ const filteredData = memoizeFunction((data: IPerson[], type: string, search: str
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
           />
-          <Dropdown 
-          placeholder="Select an option"
-          label="Sort data:"
-          options={columnNames}
-          styles={dropdownStyles}
-          onChange={onChangeSort}
-          onRenderTitle={onRenderTitle}
+          <Dropdown
+            placeholder="Select an option"
+            label="Sort data:"
+            options={columnNames}
+            styles={dropdownStyles}
+            onChange={onChangeSort}
+            onRenderTitle={onRenderTitle}
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
           />
@@ -487,11 +506,7 @@ const filteredData = memoizeFunction((data: IPerson[], type: string, search: str
           }}
         >
           {isLoading && (
-            <Stack
-            grow={1}
-            horizontalAlign="center"
-            verticalAlign="center"
-            >
+            <Stack grow={1} horizontalAlign="center" verticalAlign="center">
               <Spinner styles={spinnerStyle} />
             </Stack>
           )}
