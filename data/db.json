@@ -209,12 +209,21 @@
     },
     {
       "id": 28,
-      "name": "Pera",
+      "name": "Peraaa",
       "surname": "Peric",
       "userType": "Admin",
       "createdDate": "12/12/2023",
       "city": "City",
       "address": "Perina 80"
+    },
+    {
+      "id": 29,
+      "name": "Mika",
+      "surname": "Mikic",
+      "userType": "Guest",
+      "createdDate": "02/07/2024",
+      "city": "Grad",
+      "address": "Adresa"
     }
   ]
 }

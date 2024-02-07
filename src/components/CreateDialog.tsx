@@ -16,6 +16,7 @@ import {
   IRenderFunction,
   IDropdownProps,
   Icon,
+  IIconProps,
 } from "@fluentui/react";
 import {
   IButtonStyles,
@@ -69,6 +70,8 @@ const submitStyle: IButtonStyles = {
     color: "#918c88",
   },
 };
+
+
 const closeBtnStyle: IButtonStyles = {
   root: {
     backgroundColor: "#fa5252",
@@ -104,6 +107,15 @@ const createBtnDialog: IButtonStyles = {
     backgroundColor: "#7950f2",
     color: "#fff",
   },
+};
+
+const createIcon: IIconProps = {
+  iconName: "AddFriend",
+  styles:{
+    root:{
+      fontSize: "20px"
+    }
+  }
 };
 
 const dialogStyle: IDialogStyles = {
@@ -319,7 +331,7 @@ const CreateDialog = ({
     <Stack>
       <DefaultButton
         onClick={toggleHideDialog}
-        text="Create person"
+        iconProps={createIcon}
         styles={createBtnDialog}
       />
 

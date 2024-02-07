@@ -6,19 +6,22 @@ import {
   DetailsList,
   TextField,
   Stack,
-  IColumn,
   DetailsRow,
-  IDetailsHeaderProps,
   DetailsHeader,
   Dropdown,
-  IDropdownOption,
-  IDropdownStyles,
-  ISpinnerStyles,
-  IDropdownProps,
   Icon,
   memoizeFunction,
+  DefaultButton,
+  IButtonStyles,
+  IIconProps,
 } from "@fluentui/react";
 import {
+  IColumn,
+  IDetailsHeaderProps,
+  ISpinnerStyles,
+  IDropdownProps,
+  IDropdownOption,
+  IDropdownStyles,
   ILabelStyles,
   ITextFieldStyles,
   IRenderFunction,
@@ -29,7 +32,7 @@ import DeleteDialog from "./DeleteDialog";
 import apiRequest from "../apiRequest";
 import CreateDialog from "./CreateDialog";
 
-interface IPerson {
+type Person = {
   id: number;
   name: string;
   surname: string;
@@ -39,9 +42,16 @@ interface IPerson {
   address: string;
 }
 
-interface IUserType {
+type UserType = {
   text: string;
   key: string;
+}
+
+type Direction = 'ASC' | 'DESC'
+
+type SortDirection = {
+  direction: Direction
+  name: string
 }
 
 const labelStyles: Partial<ILabelStyles> = {
@@ -55,7 +65,7 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
     label: labelStyles,
   },
   root: {
-    margin: "0 30px 20px 0",
+    minWidth: "200px",
     maxWidth: "300px",
   },
   fieldGroup: {
@@ -75,7 +85,6 @@ const textFieldStyles: Partial<ITextFieldStyles> = {
   },
   field: {
     color: "#dee2e6",
-    fontSize: "17px",
     backgroundColor: "#2b3035",
   },
 };
@@ -137,13 +146,16 @@ const spinnerStyle: ISpinnerStyles = {
   },
 };
 
+
+
 const DisplayData = () => {
-  const [data, setData] = useState<IPerson[]>([]);
+  const [data, setData] = useState<Person[]>([]);
   const [search, setSearch] = useState<string>("");
-  const [type, setType] = useState<string>("All");
-  const [sortColumn, setSortColumn] = useState<keyof IPerson>("name");
-  const [sortDirection, setSortDirection] = useState<string>("asc");
+  const [type, setType] = useState("All");
+  const [sortColumn, setSortColumn] = useState<keyof Person>("name");
+  const [sortDirection, setSortDirection] = useState<Direction>('ASC');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [finalData, setFinalData] = useState<Person[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,7 +169,11 @@ const DisplayData = () => {
     fetchData();
   }, []);
 
-  const handleAddPerson = async (newPerson: IPerson) => {
+  useEffect(() => {
+    setFinalData(data);
+  }, [data])
+
+  const handleAddPerson = async (newPerson: Person) => {
     setData((data) => [...data, newPerson]);
 
     const postOptions = {
@@ -183,10 +199,9 @@ const DisplayData = () => {
       method: "DELETE",
     });
 
-    console.log(result);
   };
 
-  const handleEdit = async (editUser: IPerson) => {
+  const handleEdit = async (editUser: Person) => {
     setData((data) => data.map((d) => (d.id === editUser.id ? editUser : d)));
 
     const editOptions = {
@@ -201,8 +216,24 @@ const DisplayData = () => {
       `http://localhost:3003/persons/${editUser.id}`,
       editOptions
     );
-    console.log(result);
   };
+
+  const userTypes: UserType[] = data.reduce(
+    (arr, type) => {
+      if (!arr.map((el) => el.text).includes(type.userType))
+        return [
+          ...arr,
+          { text: type.userType, key: type.userType.toLowerCase() },
+        ];
+      else return arr;
+    },
+    [
+      {
+        text: "All",
+        key: "",
+      },
+    ]
+  );
 
   const columns: IColumn[] = [
     {
@@ -247,7 +278,7 @@ const DisplayData = () => {
       minWidth: 50,
       maxWidth: 70,
 
-      onRender: (item: IPerson) => (
+      onRender: (item: Person) => (
         <EditDialog handleEdit={handleEdit} user={item} userTypes={userTypes} />
       ),
     },
@@ -258,28 +289,13 @@ const DisplayData = () => {
       minWidth: 50,
       maxWidth: 70,
 
-      onRender: (item: IPerson) => (
+      onRender: (item: Person) => (
         <DeleteDialog handleDelete={() => handleDelete(item.id)} />
       ),
     },
   ];
 
-  const userTypes: IUserType[] = data.reduce(
-    (arr, type) => {
-      if (!arr.map((el) => el.text).includes(type.userType))
-        return [
-          ...arr,
-          { text: type.userType, key: type.userType.toLowerCase() },
-        ];
-      else return arr;
-    },
-    [
-      {
-        text: "All",
-        key: "",
-      },
-    ]
-  );
+  
 
   const columnNames = columns
     .map((column) => {
@@ -291,7 +307,7 @@ const DisplayData = () => {
     .filter((column) => column.text !== "Delete" && column.text !== "Edit");
 
   const filteredData = memoizeFunction(
-    (data: IPerson[], type: string, search: string): IPerson[] => {
+    (data: Person[], type: string, search: string): Person[] => {
       if (type !== "All" && search !== "") {
         return data.filter((person) => {
           return (
@@ -311,25 +327,21 @@ const DisplayData = () => {
   );
 
   const sortedData = (
-    data: IPerson[],
-    sortColumn: keyof IPerson,
-    sortDirection: string
-  ): IPerson[] => {
+    data: Person[],
+    sortColumn: keyof Person,
+    sortDirection: Direction
+  ): Person[] => {
     return [...data].sort((a, b) => {
       if (sortColumn) {
         const aSort = a[sortColumn];
         const bSort = b[sortColumn];
 
-        if (typeof aSort === typeof bSort) {
           switch (sortDirection) {
-            case "asc":
+            case "ASC":
               return aSort > bSort ? 1 : -1;
-            case "desc":
+            case "DESC":
               return bSort > aSort ? 1 : -1;
           }
-        } else {
-          return 0;
-        }
       }
       return 0;
     });
@@ -441,20 +453,55 @@ const DisplayData = () => {
     option?: IDropdownOption,
     _index?: number
   ) => {
-    setSortColumn((option?.key as keyof IPerson) || "");
+    setSortColumn((option?.key as keyof Person) || "");
   };
 
-  const onChangeSortDirection = (
-    event: React.FormEvent<HTMLDivElement>,
-    option?: IDropdownOption,
-    _index?: number
-  ) => {
-    setSortDirection(String(option?.key));
+const directionOptions: Array<SortDirection> = [
+    { direction: 'ASC', name: 'A-Z' },
+    { direction: 'DESC', name: 'Z-A' }
+  ]
+
+  const onChangeSortDirection = (_: any, option?: IDropdownOption) => {
+    if (!option) return;
+    setSortDirection(option.key as Direction);
   };
+  const filterButton : IButtonStyles = {
+    root: {
+      backgroundColor: "#7950f2",
+      color: "#fff",
+      padding: "16px 30px",
+      border: "0px",
+      marginRight: "20px",
+      borderRadius: "0.75rem",
+      width: "100px"
+    },
+    rootHovered: {
+      backgroundColor: "#6741d9",
+      color: "#fff",
+    },
+    rootPressed: {
+      backgroundColor: "#7950f2",
+      color: "#fff",
+    },
+  }
+
+  const handleFilter = () => {
+    setFinalData(filteredData(data, type, search));
+  }
+  const handleSort = () => {
+    setFinalData(sortedData(finalData, sortColumn, sortDirection));
+  }
+  const filterIcon: IIconProps = {
+    iconName: "filter",
+  }
+  const sortIcon: IIconProps = {
+    iconName: "sort",
+  }
   return (
     <Stack>
       <Stack tokens={{ padding: 40 }}>
-        <Stack horizontal tokens={{ childrenGap: 20 }}>
+        <Stack tokens={{childrenGap: 20}} styles={{root:{marginBottom: "20px"}}}>
+          <Stack horizontal tokens={{ childrenGap: 40 }}>
           <TextField
             label="Filter by name:"
             value={search}
@@ -473,7 +520,13 @@ const DisplayData = () => {
             onRenderTitle={onRenderTitle}
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
+
           />
+          <Stack grow={1} horizontalAlign="start" verticalAlign="end">
+          <DefaultButton text="Filter" styles={filterButton} iconProps={filterIcon} onClick={handleFilter}></DefaultButton>
+          </Stack>
+          </Stack>
+          <Stack horizontal tokens={{ childrenGap: 40 }}>
           <Dropdown
             placeholder="Select an option"
             label="Sort data by:"
@@ -487,16 +540,7 @@ const DisplayData = () => {
           <Dropdown
             placeholder="Select an option"
             label="Sort direction:"
-            options={[
-              {
-                text: "A-Z",
-                key: "asc",
-              },
-              {
-                text: "Z-A",
-                key: "desc",
-              },
-            ]}
+            options={directionOptions.map(x => ({ key: x.direction, text: x.name }))}
             selectedKey={sortDirection}
             onChange={onChangeSortDirection}
             styles={dropdownStyles}
@@ -504,6 +548,9 @@ const DisplayData = () => {
             onRenderCaretDown={onRenderCaretDown}
             onRenderPlaceholder={onRenderPlaceholder}
           />
+          <Stack grow={1} horizontalAlign="start" verticalAlign="end">
+          <DefaultButton text="Sort" styles={filterButton} iconProps={sortIcon} onClick={handleSort}></DefaultButton>
+          </Stack>
           <Stack
             style={{
               justifyContent: "center",
@@ -517,6 +564,8 @@ const DisplayData = () => {
               userTypes={userTypes}
             />
           </Stack>
+          </Stack>
+          
         </Stack>
         <Stack
           style={{
@@ -532,11 +581,7 @@ const DisplayData = () => {
           {!isLoading && (
             <DetailsList
               columns={columns}
-              items={sortedData(
-                filteredData(data, type, search),
-                sortColumn,
-                sortDirection
-              )}
+              items={finalData}
               setKey="multiple"
               selectionMode={SelectionMode.none}
               onShouldVirtualize={() => false}

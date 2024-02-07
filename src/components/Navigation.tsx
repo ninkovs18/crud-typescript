@@ -6,11 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 const navigationStyles: Partial<INavStyles> = {
   root: {
-    height: "90vh",
+    height: "100%",
     boxSizing: "border-box",
     backgroundColor: "#2b3035",
     paddingTop: "20px",
-    borderRight: "2px solid #212529",
   },
   link: {
     backgroundColor: "#343a40",

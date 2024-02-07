@@ -10,7 +10,7 @@ function App() {
       <Stack>
         <Header />
       </Stack>
-           <Stack horizontal>
+           <Stack horizontal styles={{root:{backgroundColor: "#2b3035"}}}>
            <Stack styles={{root: {width: "20vw"}}}>
            <Navigation />
            </Stack>

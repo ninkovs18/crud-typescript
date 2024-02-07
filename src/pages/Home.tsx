@@ -3,7 +3,7 @@ import { Stack } from "@fluentui/react";
 
 const Home = () => {
   return (
-    <Stack style={{ height: "90vh", backgroundColor: "#2b3035" }}>
+    <Stack style={{backgroundColor: "#2b3035", borderLeft: "2px solid #212529" }}>
       <DisplayData />
     </Stack>
   );
