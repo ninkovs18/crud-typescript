@@ -96,7 +96,6 @@ const createBtnDialog: IButtonStyles = {
     color: "#fff",
     padding: "16px 30px",
     border: "0px",
-    marginRight: "20px",
     borderRadius: "0.75rem",
   },
   rootHovered: {

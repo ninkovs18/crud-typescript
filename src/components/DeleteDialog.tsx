@@ -7,6 +7,7 @@ import {
   DialogFooter,
   DialogType,
   IDialogContentProps,
+  IIconProps,
   PrimaryButton,
   Stack,
 } from "@fluentui/react";
@@ -19,39 +20,35 @@ import {
 
 type DeleteDialogProps = {
   handleDelete: () => Promise<void>;
+  setSelectedPerson: (n: null) => void;
 };
 
-const deleteIcon = {
-  iconName: "Delete",
-  styles: {
-    root: {
-      color: "#fff",
-      padding: "10px",
-      backgroundColor: "#fa5252",
-      borderRadius: "50%",
-      selectors: {
-        ":hover": { backgroundColor: "#e03131" },
-      },
-    },
-  },
-};
-const deleteBtnStyle: IButtonStyles = {
+const deleteBtnDialog: IButtonStyles = {
   root: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
+    padding: "16px 30px",
     border: "0px",
     borderRadius: "0.75rem",
-    width: "50px",
-    backgroundColor: "transparent",
-    padding: "0px",
   },
-  flexContainer: {
-    justifyContent: "start",
-    background: "#transparent",
-    selectors: {
-      ":hover": { background: "#212529" },
-    },
+  rootHovered: {
+    backgroundColor: "#e03131",
+    color: "#fff",
+  },
+  rootPressed: {
+    backgroundColor: "#fa5252",
+    color: "#fff",
   },
 };
 
+const deleteIcon: IIconProps = {
+  iconName: "Delete",
+  styles:{
+    root:{
+      fontSize: "20px"
+    }
+  }
+};
 const dialogStyle: IDialogStyles = {
   main: {
     backgroundColor: "#212529",
@@ -120,11 +117,12 @@ const dialogContentProps: IDialogContentProps = {
   styles: dialogContentStyles,
 };
 
-const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
+const DeleteDialog = ({ handleDelete, setSelectedPerson }: DeleteDialogProps) => {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
   const onClickDelete = () => {
     handleDelete();
+    setSelectedPerson(null);
     toggleHideDialog();
   };
 
@@ -133,7 +131,7 @@ const DeleteDialog = ({ handleDelete }: DeleteDialogProps) => {
       <DefaultButton
         onClick={toggleHideDialog}
         iconProps={deleteIcon}
-        styles={deleteBtnStyle}
+        styles={deleteBtnDialog}
       />
 
       <Dialog

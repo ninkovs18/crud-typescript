@@ -1,35 +1,8 @@
 {
   "persons": [
     {
-      "id": 3,
-      "name": "Lazaa",
-      "surname": "Peric",
-      "userType": "Moderator",
-      "createdDate": "02/04/2022",
-      "city": "Example City",
-      "address": "Paje Marganovica"
-    },
-    {
-      "id": 4,
-      "name": "Toma",
-      "surname": "Mikic",
-      "userType": "Guest",
-      "createdDate": "16/12/2021",
-      "city": "Example City",
-      "address": "390 Main St"
-    },
-    {
-      "id": 5,
-      "name": "Peraa",
-      "surname": "Mikic",
-      "userType": "Regular",
-      "createdDate": "30/01/2022",
-      "city": "Example City",
-      "address": "537 Main St"
-    },
-    {
       "id": 6,
-      "name": "Zika",
+      "name": "Zikaaa",
       "surname": "Tomic",
       "userType": "Moderator",
       "createdDate": "16/05/2020",
@@ -44,15 +17,6 @@
       "createdDate": "12/05/2021",
       "city": "Example City",
       "address": "155 Main St"
-    },
-    {
-      "id": 10,
-      "name": "Mika",
-      "surname": "Mikic",
-      "userType": "Admin",
-      "createdDate": "12/11/2023",
-      "city": "Mikovac",
-      "address": "Mikina 61"
     },
     {
       "id": 11,
@@ -119,7 +83,7 @@
     },
     {
       "id": 18,
-      "name": "Mika",
+      "name": "Mikaaa",
       "surname": "Mikic",
       "userType": "Admin",
       "createdDate": "12/11/2023",
@@ -208,15 +172,6 @@
       "address": "154 Main St"
     },
     {
-      "id": 28,
-      "name": "Peraaa",
-      "surname": "Peric",
-      "userType": "Admin",
-      "createdDate": "12/12/2023",
-      "city": "City",
-      "address": "Perina 80"
-    },
-    {
       "id": 29,
       "name": "Mika",
       "surname": "Mikic",
@@ -224,6 +179,15 @@
       "createdDate": "02/07/2024",
       "city": "Grad",
       "address": "Adresa"
+    },
+    {
+      "id": 30,
+      "name": "Laza",
+      "surname": "Lazic",
+      "userType": "Moderator",
+      "createdDate": "02/08/2024",
+      "city": "Lazarevo",
+      "address": "Adresa 123"
     }
   ]
 }

@@ -17,6 +17,7 @@ import {
   IRenderFunction,
   IDropdownProps,
   Icon,
+  IIconProps,
 } from "@fluentui/react";
 
 import {
@@ -32,13 +33,7 @@ interface IUserType {
   key: string;
 }
 
-type EditDialogProps = {
-  user: IPerson;
-  handleEdit: (editUser: IPerson) => Promise<void>;
-  userTypes: IUserType[];
-};
-
-interface IPerson {
+type  Person = {
   id: number;
   name: string;
   surname: string;
@@ -48,35 +43,41 @@ interface IPerson {
   address: string;
 }
 
-const editIcon = {
-  iconName: "EditContact",
-  styles: {
-    root: {
-      color: "#fff",
-      padding: "10px",
-      backgroundColor: "#7950f2",
-      borderRadius: "50%",
-      selectors: {
-        ":hover": { backgroundColor: "#6741d9" },
-      },
-    },
-  },
+type EditDialogProps = {
+  user: Person;
+  handleEdit: (editUser: Person) => Promise<void>;
+  setSelectedPerson: (n: null) => void;
+  userTypes: IUserType[];
 };
+
+
+
+
 const editBtnDialog: IButtonStyles = {
   root: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+    padding: "16px 30px",
     border: "0px",
     borderRadius: "0.75rem",
-    width: "50px",
-    backgroundColor: "transparent",
-    padding: "0px",
   },
-  flexContainer: {
-    justifyContent: "start",
-    background: "#transparent",
-    selectors: {
-      ":hover": { background: "#212529" },
-    },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
   },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+  },
+};
+
+const editIcon: IIconProps = {
+  iconName: "EditContact",
+  styles:{
+    root:{
+      fontSize: "20px"
+    }
+  }
 };
 
 const submitStyle: IButtonStyles = {
@@ -235,8 +236,8 @@ const dialogContentProps: IDialogContentProps = {
   styles: dialogContentStyles,
 };
 
-const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
-  const [userEdit, setUserEdit] = useState<IPerson>(user);
+const EditDialog = ({ user, handleEdit, userTypes, setSelectedPerson }: EditDialogProps) => {
+  const [userEdit, setUserEdit] = useState<Person>(user);
 
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
@@ -265,6 +266,7 @@ const EditDialog = ({ user, handleEdit, userTypes }: EditDialogProps) => {
 
   const onClickEdit = () => {
     handleEdit(userEdit);
+    setSelectedPerson(null);
     toggleHideDialog();
   };
 

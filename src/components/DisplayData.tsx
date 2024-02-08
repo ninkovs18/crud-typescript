@@ -13,7 +13,8 @@ import {
   memoizeFunction,
   DefaultButton,
   IButtonStyles,
-  IIconProps,
+  Checkbox,
+  CheckboxVisibility,
 } from "@fluentui/react";
 import {
   IColumn,
@@ -156,6 +157,7 @@ const DisplayData = () => {
   const [sortDirection, setSortDirection] = useState<Direction>('ASC');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [finalData, setFinalData] = useState<Person[]>([]);
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,6 +174,10 @@ const DisplayData = () => {
   useEffect(() => {
     setFinalData(data);
   }, [data])
+
+  useEffect(() => {
+    setSelectedPerson(null);
+  }, [finalData])
 
   const handleAddPerson = async (newPerson: Person) => {
     setData((data) => [...data, newPerson]);
@@ -235,7 +241,32 @@ const DisplayData = () => {
     ]
   );
 
+  const test = memoizeFunction((item: Person) => selectedPerson !== null && item.id === selectedPerson.id);
+
+  // const onChangeSelect = (ev: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked:boolean | undefined, item: Person) =>{
+  //   if(!selectedPerson){
+  //     setSelectedPerson(item);
+  //   }else{
+  //     if(selectedPerson.id === item.id){
+  //       setSelectedPerson(null);
+  //     }else{
+  //       setSelectedPerson(item);
+  //     }
+  //   }
+  // }
+
+  // onChange={(ev, checked) => onChangeSelect(ev, checked, item)}
   const columns: IColumn[] = [
+    {
+      key: "select",
+      name: "Select",
+      minWidth: 50,
+      maxWidth: 70,
+
+      onRender: (item: Person) => (
+        <Checkbox checked={test(item)} styles={{checkbox: {border: 0, backgroundColor: "#6741d9"}, checkmark: {color: "#fff"}}} />
+      ),
+    },
     {
       key: "name",
       name: "Name",
@@ -271,31 +302,7 @@ const DisplayData = () => {
       minWidth: 150,
       maxWidth: 200,
     },
-    {
-      key: "edit",
-      name: "Edit",
-      fieldName: "edit",
-      minWidth: 50,
-      maxWidth: 70,
-
-      onRender: (item: Person) => (
-        <EditDialog handleEdit={handleEdit} user={item} userTypes={userTypes} />
-      ),
-    },
-    {
-      key: "delete",
-      name: "Delete",
-      fieldName: "delete",
-      minWidth: 50,
-      maxWidth: 70,
-
-      onRender: (item: Person) => (
-        <DeleteDialog handleDelete={() => handleDelete(item.id)} />
-      ),
-    },
   ];
-
-  
 
   const columnNames = columns
     .map((column) => {
@@ -304,7 +311,7 @@ const DisplayData = () => {
         key: column.key,
       };
     })
-    .filter((column) => column.text !== "Delete" && column.text !== "Edit");
+    .filter((column) => column.text !== "Select");
 
   const filteredData = memoizeFunction(
     (data: Person[], type: string, search: string): Person[] => {
@@ -347,10 +354,24 @@ const DisplayData = () => {
     });
   };
 
+  const onClickRow = (item: Person) => {
+
+    if(!selectedPerson){
+      setSelectedPerson(item);
+    }else{
+      if(selectedPerson.id === item.id){
+        setSelectedPerson(null);
+      }else{
+        setSelectedPerson(item);
+      }
+    }
+    
+  }
+
   const onRenderRow: IRenderFunction<IDetailsRowProps> = (props) => {
     if (props) {
       return (
-        <div>
+        <div onClick={() => onClickRow(props.item)}>
           <DetailsRow
             {...props}
             styles={{
@@ -491,12 +512,7 @@ const directionOptions: Array<SortDirection> = [
   const handleSort = () => {
     setFinalData(sortedData(finalData, sortColumn, sortDirection));
   }
-  const filterIcon: IIconProps = {
-    iconName: "filter",
-  }
-  const sortIcon: IIconProps = {
-    iconName: "sort",
-  }
+
   return (
     <Stack>
       <Stack tokens={{ padding: 40 }}>
@@ -523,7 +539,7 @@ const directionOptions: Array<SortDirection> = [
 
           />
           <Stack grow={1} horizontalAlign="start" verticalAlign="end">
-          <DefaultButton text="Filter" styles={filterButton} iconProps={filterIcon} onClick={handleFilter}></DefaultButton>
+          <DefaultButton text="Filter" styles={filterButton} iconProps={{iconName: "filter"}} onClick={handleFilter}></DefaultButton>
           </Stack>
           </Stack>
           <Stack horizontal tokens={{ childrenGap: 40 }}>
@@ -549,7 +565,7 @@ const directionOptions: Array<SortDirection> = [
             onRenderPlaceholder={onRenderPlaceholder}
           />
           <Stack grow={1} horizontalAlign="start" verticalAlign="end">
-          <DefaultButton text="Sort" styles={filterButton} iconProps={sortIcon} onClick={handleSort}></DefaultButton>
+          <DefaultButton text="Sort" styles={filterButton} iconProps={{iconName: "sort"}} onClick={handleSort}></DefaultButton>
           </Stack>
           <Stack
             style={{
@@ -558,11 +574,15 @@ const directionOptions: Array<SortDirection> = [
               alignItems: "end",
             }}
           >
+            <Stack horizontal tokens={{childrenGap: 5}} styles={{root:{marginRight: 20}}}>
+            {selectedPerson && <DeleteDialog handleDelete={() => handleDelete(selectedPerson.id)} setSelectedPerson={setSelectedPerson} />}
+            {selectedPerson && <EditDialog handleEdit={handleEdit} user={selectedPerson} setSelectedPerson={setSelectedPerson} userTypes={userTypes} />}
             <CreateDialog
               data={data}
               handleAddPerson={handleAddPerson}
               userTypes={userTypes}
             />
+            </Stack>
           </Stack>
           </Stack>
           
@@ -583,6 +603,7 @@ const directionOptions: Array<SortDirection> = [
               columns={columns}
               items={finalData}
               setKey="multiple"
+              checkboxVisibility={CheckboxVisibility.always}
               selectionMode={SelectionMode.none}
               onShouldVirtualize={() => false}
               onRenderRow={onRenderRow}
@@ -608,10 +629,10 @@ const directionOptions: Array<SortDirection> = [
                   margin: "0 auto",
                 }}
               />
-              there is no person in the list
+              There is no person in the list!
             </p>
           )}
-          {!isLoading && !filteredData(data, type, search).length && (
+          {!isLoading && !finalData.length && (
             <p
               style={{
                 textAlign: "center",
