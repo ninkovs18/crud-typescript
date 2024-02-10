@@ -100,15 +100,6 @@
       "address": "154 Main St"
     },
     {
-      "id": 20,
-      "name": "Pera",
-      "surname": "Peric",
-      "userType": "Admin",
-      "createdDate": "12/12/2023",
-      "city": "City",
-      "address": "Perina 80"
-    },
-    {
       "id": 21,
       "name": "Lazaa",
       "surname": "Peric",
@@ -188,6 +179,15 @@
       "createdDate": "02/08/2024",
       "city": "Lazarevo",
       "address": "Adresa 123"
+    },
+    {
+      "id": 31,
+      "name": "Sima",
+      "surname": "Simic",
+      "userType": "Guest",
+      "createdDate": "02/10/2024",
+      "city": "Grad",
+      "address": "Adresa"
     }
   ]
 }
