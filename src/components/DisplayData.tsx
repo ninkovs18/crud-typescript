@@ -240,10 +240,6 @@ const DisplayData = () => {
     )
   );
 
-  const test = memoizeFunction(
-    (item: Person) => selectedPerson !== null && item.id === selectedPerson.id
-  );
-
   // const onChangeSelect = (ev: React.FormEvent<HTMLElement | HTMLInputElement> | undefined, checked:boolean | undefined, item: Person) =>{
   //   if(!selectedPerson){
   //     setSelectedPerson(item);
@@ -266,7 +262,7 @@ const DisplayData = () => {
 
       onRender: (item: Person) => (
         <Checkbox
-          checked={test(item)}
+          checked={item === selectedPerson}
           styles={{
             checkbox: {
               border: 0,
