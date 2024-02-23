@@ -119,7 +119,7 @@
     },
     {
       "id": 23,
-      "name": "Peraa",
+      "name": "Peraaa",
       "surname": "Mikic",
       "userType": "Regular",
       "createdDate": "30/01/2022",
@@ -188,6 +188,24 @@
       "createdDate": "02/10/2024",
       "city": "Grad",
       "address": "Adresa"
+    },
+    {
+      "id": 32,
+      "name": "Laza",
+      "surname": "Lazic",
+      "userType": "Regular",
+      "createdDate": "02/21/2024",
+      "city": "Lazarevac",
+      "address": "Lazina 965"
+    },
+    {
+      "id": 33,
+      "name": "Ana",
+      "surname": "Anic",
+      "userType": "Regular",
+      "createdDate": "02/21/2024",
+      "city": "Beograd",
+      "address": "Francuska"
     }
   ]
 }

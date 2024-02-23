@@ -138,6 +138,26 @@ const dropdownStyles: Partial<IDropdownStyles> = {
   },
 };
 
+const filterButton: IButtonStyles = {
+  root: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+    padding: "16px 30px",
+    border: "0px",
+    marginRight: "20px",
+    borderRadius: "0.75rem",
+    width: "100px",
+  },
+  rootHovered: {
+    backgroundColor: "#6741d9",
+    color: "#fff",
+  },
+  rootPressed: {
+    backgroundColor: "#7950f2",
+    color: "#fff",
+  },
+};
+
 const spinnerStyle: ISpinnerStyles = {
   circle: {
     height: 100,
@@ -170,7 +190,9 @@ const DisplayData = () => {
   }, []);
 
   useEffect(() => {
-    setFinalData(data);
+    setFinalData(
+      sortedData(filteredData(data, type, search), sortColumn, sortDirection)
+    );
   }, [data]);
 
   useEffect(() => {
@@ -512,25 +534,6 @@ const DisplayData = () => {
   const onChangeSortDirection = (_: any, option?: IDropdownOption) => {
     if (!option) return;
     setSortDirection(option.key as Direction);
-  };
-  const filterButton: IButtonStyles = {
-    root: {
-      backgroundColor: "#7950f2",
-      color: "#fff",
-      padding: "16px 30px",
-      border: "0px",
-      marginRight: "20px",
-      borderRadius: "0.75rem",
-      width: "100px",
-    },
-    rootHovered: {
-      backgroundColor: "#6741d9",
-      color: "#fff",
-    },
-    rootPressed: {
-      backgroundColor: "#7950f2",
-      color: "#fff",
-    },
   };
 
   const handleFilter = () => {
